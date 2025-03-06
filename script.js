@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Begrüßung automatisch anzeigen
     const botMessage = document.createElement("div");
     botMessage.className = "chat-message bot-message";
-    botMessage.textContent = "Hallo! 👋 Ich bin dein Bewerbungs-Chatbot. Wie kann ich dir helfen?";
+    botMessage.textContent = "Moin! 👋 Welche Fragen darf ich dir zu Peer beantworten?";
     chatbox.appendChild(botMessage);
 });
 
