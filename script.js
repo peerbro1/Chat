@@ -4,12 +4,18 @@ document.getElementById("sendButton").addEventListener("click", async () => {
     const userInput = document.getElementById("userInput").value.trim();
     if (!userInput) return;
 
+    const chatbox = document.getElementById("chatbox");
+
     // Nutzer-Eingabe anzeigen
-    document.getElementById("chatbox").innerHTML += `<p><b>Du:</b> ${userInput}</p>`;
+    const userMessage = document.createElement("div");
+    userMessage.className = "chat-message user-message";
+    userMessage.textContent = userInput;
+    chatbox.appendChild(userMessage);
+    chatbox.scrollTop = chatbox.scrollHeight;  // Automatisch nach unten scrollen
+
     document.getElementById("userInput").value = "";
 
     try {
-        // Anfrage an n8n senden
         const response = await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -24,13 +30,17 @@ document.getElementById("sendButton").addEventListener("click", async () => {
         console.log("Antwort vom Server:", data);
 
         // Antwort anzeigen
-        if (data.output) {
-            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.output}</p>`;
-        } else {
-            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> (Keine Antwort erhalten)</p>`;
-        }
+        const botMessage = document.createElement("div");
+        botMessage.className = "chat-message bot-message";
+        botMessage.textContent = data.output || "Keine Antwort erhalten";
+        chatbox.appendChild(botMessage);
+        chatbox.scrollTop = chatbox.scrollHeight;  // Automatisch nach unten scrollen
     } catch (error) {
         console.error("Fehler beim Abrufen der Antwort:", error);
-        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
+        const errorMessage = document.createElement("div");
+        errorMessage.className = "chat-message bot-message";
+        errorMessage.textContent = "Fehler bei der Verbindung.";
+        chatbox.appendChild(errorMessage);
+        chatbox.scrollTop = chatbox.scrollHeight;
     }
 });
