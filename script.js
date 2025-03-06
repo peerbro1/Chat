@@ -1,4 +1,5 @@
-const webhookUrl = "DEINE_N8N_WEBHOOK_URL_HIER"; // Webhook-URL aus n8n einfügen
+const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook-test/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+
 
 document.getElementById("sendButton").addEventListener("click", async () => {
     const userInput = document.getElementById("userInput").value;
