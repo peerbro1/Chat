@@ -1,4 +1,4 @@
-const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook-test/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
 
 document.getElementById("sendButton").addEventListener("click", async () => {
     const userInput = document.getElementById("userInput").value.trim();
