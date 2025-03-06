@@ -16,17 +16,16 @@ document.getElementById("sendButton").addEventListener("click", async () => {
             body: JSON.stringify({ message: userInput })
         });
 
-        // Prüfen, ob die Antwort erfolgreich ist
         if (!response.ok) {
-            throw new Error(`Serverantwort: ${response.status} ${response.statusText}`);
+            throw new Error(`Fehler: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
-        console.log("Antwort vom Server:", data);  // Debugging
+        console.log("Antwort vom Server:", data);
 
-        // Die Antwort ist in einem Array, also müssen wir die erste Antwort extrahieren
-        if (Array.isArray(data) && data.length > 0 && data[0].output) {
-            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data[0].output}</p>`;
+        // Antwort anzeigen
+        if (data.output) {
+            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.output}</p>`;
         } else {
             document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> (Keine Antwort erhalten)</p>`;
         }
