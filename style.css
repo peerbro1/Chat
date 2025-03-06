@@ -1,57 +1,72 @@
+/* Allgemeines Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     text-align: center;
-    background-color: #f4f4f4;
+    background-color: #FAE5D3; /* Warme Hintergrundfarbe */
+    background-image: url('https://www.transparenttextures.com/patterns/beige-paper.png'); /* Strukturierte Hintergrundtextur */
     margin: 0;
     padding: 0;
 }
 
-h1 {
-    margin-top: 20px;
-    font-size: 24px;
+/* Begrüßungstext */
+#chat-info {
+    max-width: 500px;
+    margin: 20px auto;
+    font-size: 18px;
     color: #333;
+    padding: 10px;
 }
 
+/* Chat-Container */
 #chat-container {
     width: 90%;
-    max-width: 400px;
+    max-width: 600px; /* Breiterer Chat */
+    height: 500px; /* Höheres Fenster */
     margin: 20px auto;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
 }
 
+/* Chatbox mit Scroll-Funktion */
 #chatbox {
-    height: 300px;
-    overflow-y: auto;
+    flex: 1;
     padding: 15px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
+/* Chat-Nachrichten */
 .chat-message {
-    padding: 10px;
-    border-radius: 8px;
-    max-width: 75%;
+    padding: 12px;
+    border-radius: 12px;
+    max-width: 80%;
     word-wrap: break-word;
+    display: inline-block;
+    text-align: left;
 }
 
+/* Nutzer-Nachrichten */
 .user-message {
     background-color: #0078FF;
     color: white;
     align-self: flex-end;
+    text-align: right;
 }
 
+/* Bot-Nachrichten */
 .bot-message {
-    background-color: #e5e5e5;
+    background-color: #FFD166;
     color: black;
     align-self: flex-start;
+    text-align: left;
 }
 
+/* Eingabecontainer */
 #input-container {
     display: flex;
     padding: 10px;
@@ -61,7 +76,7 @@ h1 {
 
 #userInput {
     flex: 1;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
@@ -69,7 +84,7 @@ h1 {
 
 #sendButton {
     margin-left: 10px;
-    padding: 10px 15px;
+    padding: 12px 16px;
     border: none;
     background-color: #0078FF;
     color: white;
