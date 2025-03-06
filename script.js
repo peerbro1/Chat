@@ -22,11 +22,11 @@ document.getElementById("sendButton").addEventListener("click", async () => {
         }
 
         const data = await response.json();
-        console.log("Antwort vom Server:", data);  // Debugging: Serverantwort anzeigen
+        console.log("Antwort vom Server:", data);  // Debugging
 
-        // Antwort aus n8n anzeigen (sicherstellen, dass "output" verwendet wird)
-        if (data.output) {
-            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.output}</p>`;
+        // Die Antwort ist in einem Array, also müssen wir die erste Antwort extrahieren
+        if (Array.isArray(data) && data.length > 0 && data[0].output) {
+            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data[0].output}</p>`;
         } else {
             document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> (Keine Antwort erhalten)</p>`;
         }
