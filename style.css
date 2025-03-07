@@ -1,7 +1,7 @@
-/* Allgemeines Styling */
+/* Hintergrund mit moderner Farbstruktur */
 body {
     font-family: "Arial", sans-serif;
-    background-color: #f0f2f5;
+    background: linear-gradient(135deg, #3a7bd5, #3a6073);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,19 +9,19 @@ body {
     margin: 0;
 }
 
-/* Container für den Chat */
+/* Chat-Container */
 #chat-container {
     width: 400px;
     height: 600px;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
-/* Chat-Header */
+/* Chat-Kopfbereich */
 #chat-header {
     background: #0078ff;
     color: white;
@@ -45,10 +45,11 @@ body {
 /* Nachrichten-Styling */
 .message {
     max-width: 75%;
-    padding: 10px;
+    padding: 12px;
     border-radius: 15px;
     word-wrap: break-word;
     font-size: 14px;
+    line-height: 1.4;
 }
 
 .user {

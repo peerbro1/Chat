@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
 
+    // Begrüßungsnachricht beim Laden der Seite
+    addMessage("bot", "Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
+
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") sendMessage();
@@ -36,3 +39,4 @@ document.addEventListener("DOMContentLoaded", function() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 });
+
