@@ -3,11 +3,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
 
-    // Begrüßungsnachricht direkt einfügen
-    setTimeout(() => {
-        addMessage("bot", "👋 Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
-    }, 500);
-
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") sendMessage();
@@ -30,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => addMessage("bot", data.output))
-        .catch(() => addMessage("bot", "❌ Fehler bei der Verbindung."));
+        .catch(() => addMessage("bot", "Fehler bei der Verbindung."));
     }
 
     function addMessage(sender, text) {

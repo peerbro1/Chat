@@ -1,7 +1,7 @@
 /* Allgemeines Styling */
 body {
     font-family: "Arial", sans-serif;
-    background-color: #f0f2f5;
+    background-color: #f4f4f4;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,8 +11,8 @@ body {
 
 /* Container für den Chat */
 #chat-container {
-    width: 400px;
-    height: 600px;
+    width: 450px;
+    height: 650px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -45,7 +45,7 @@ body {
 /* Nachrichten-Styling */
 .message {
     max-width: 75%;
-    padding: 10px;
+    padding: 12px;
     border-radius: 15px;
     word-wrap: break-word;
     font-size: 14px;
