@@ -16,17 +16,24 @@ body {
 #main-container {
     display: flex;
     width: 90%;
-    max-width: 1200px;
+    max-width: 1400px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-#match-container, #open-container, #redflags-container {
+#match-container, #open-container {
     width: 25%;
     padding: 15px;
     background: #f8f8f8;
+    overflow-y: auto;
+}
+
+#redflags-container {
+    width: 50%;
+    padding: 15px;
+    background: #ffe6e6;
     overflow-y: auto;
 }
 
@@ -37,6 +44,47 @@ body {
     padding: 15px;
 }
 
+h2 {
+    font-weight: bold;
+}
+
+#match-list li {
+    border-left: 3px solid green;
+    font-weight: bold;
+    color: green;
+}
+
+#open-list li {
+    border-left: 3px solid orange;
+    font-weight: bold;
+    color: orange;
+}
+
 #redflags-list li {
+    border-left: 3px solid red;
+    font-weight: bold;
     color: red;
+}
+
+.green-text {
+    color: green;
+}
+
+.orange-text {
+    color: orange;
+}
+
+.red-text {
+    color: red;
+}
+
+/* Responsive Anpassung */
+@media screen and (max-width: 768px) {
+    #main-container {
+        flex-direction: column;
+    }
+
+    #match-container, #chat-container, #open-container, #redflags-container {
+        width: 100%;
+    }
 }

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // DOM-Elemente
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
@@ -10,24 +9,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const redFlagsList = document.getElementById("redflags-list");
     const statusContainer = document.getElementById("status-container");
 
-    // Webhook-URLs
-    const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
-    // Event-Listener
-    sendButton.addEventListener("click", sendMessage);
-    userInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") sendMessage();
-    });
     uploadButton.addEventListener("click", uploadFile);
     
     fileInput.addEventListener("change", function() {
-        if (fileInput.files.length > 0) {
-            statusContainer.textContent = `Ausgewählte Datei: ${fileInput.files[0].name}`;
-            statusContainer.className = "";
-        } else {
-            statusContainer.textContent = "";
-        }
+        statusContainer.textContent = fileInput.files.length > 0 ? `Ausgewählte Datei: ${fileInput.files[0].name}` : "";
     });
 
     function uploadFile() {
@@ -50,6 +37,10 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
+            if (!data.passende_qualifikationen || !data.zu_klaerende_punkte || !data.red_flags) {
+                throw new Error("Fehlende Daten in der API-Antwort");
+            }
+
             statusContainer.textContent = "Analyse abgeschlossen!";
             statusContainer.className = "success";
 
@@ -68,20 +59,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
         matching.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = item;
+            li.innerHTML = `<b>${item}</b>`;
+            li.classList.add("green-text");
             matchList.appendChild(li);
         });
 
         open.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = item;
+            li.innerHTML = `<b>${item}</b>`;
+            li.classList.add("orange-text");
             openList.appendChild(li);
         });
 
         redFlags.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = item;
-            li.style.color = "red";
+            li.innerHTML = `<b>${item}</b>`;
+            li.classList.add("red-text");
             redFlagsList.appendChild(li);
         });
     }
