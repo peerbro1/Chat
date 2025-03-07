@@ -1,5 +1,5 @@
 const chatWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
-const uploadWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
+const uploadWebhookUrl = "https://corsproxy.io/?https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
 
 // Chat-Funktion
 document.getElementById("sendButton").addEventListener("click", async () => {
