@@ -1,5 +1,5 @@
-const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a"; // Chatbot Webhook
-const uploadWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/dein-upload-webhook"; // Bild-Upload Webhook
+const chatWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";  // Chatbot Webhook
+const uploadWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a"; // Upload Webhook
 
 // Begrüßung des Chatbots
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,15 +28,11 @@ document.getElementById("sendButton").addEventListener("click", async () => {
     document.getElementById("userInput").value = "";
 
     try {
-        const response = await fetch(webhookUrl, {
+        const response = await fetch(chatWebhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: userInput })
         });
-
-        if (!response.ok) {
-            throw new Error(`Fehler: ${response.status} ${response.statusText}`);
-        }
 
         const data = await response.json();
 
@@ -47,11 +43,7 @@ document.getElementById("sendButton").addEventListener("click", async () => {
         chatbox.scrollTop = chatbox.scrollHeight;
     } catch (error) {
         console.error("Fehler:", error);
-        const errorMessage = document.createElement("div");
-        errorMessage.className = "chat-message bot-message";
-        errorMessage.textContent = "Fehler bei der Verbindung.";
-        chatbox.appendChild(errorMessage);
-        chatbox.scrollTop = chatbox.scrollHeight;
+        document.getElementById("uploadStatus").textContent = "Fehler bei der Verbindung.";
     }
 });
 
@@ -76,7 +68,7 @@ document.getElementById("uploadButton").addEventListener("click", async () => {
             body: formData
         });
 
-        document.getElementById("uploadStatus").textContent = "Upload erfolgreich! Das Bild wird analysiert.";
+        document.getElementById("uploadStatus").textContent = "Upload erfolgreich!";
     } catch (error) {
         document.getElementById("uploadStatus").textContent = "Fehler beim Hochladen.";
     }
