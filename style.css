@@ -1,8 +1,7 @@
-/* Hintergrund mit stilvoller Struktur */
+/* Allgemeines Styling */
 body {
     font-family: "Arial", sans-serif;
-    background: url('https://source.unsplash.com/1600x900/?abstract,technology') no-repeat center center fixed;
-    background-size: cover;
+    background-color: #f0f2f5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,20 +9,19 @@ body {
     margin: 0;
 }
 
-/* Chat-Container */
+/* Container für den Chat */
 #chat-container {
-    width: 420px;
+    width: 400px;
     height: 600px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    backdrop-filter: blur(10px);
 }
 
-/* Chat-Kopfbereich */
+/* Chat-Header */
 #chat-header {
     background: #0078ff;
     color: white;
@@ -31,51 +29,42 @@ body {
     padding: 15px;
     font-size: 18px;
     font-weight: bold;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
 }
 
 /* Chat-Bereich */
 #chat-box {
     flex: 1;
-    padding: 15px;
+    padding: 10px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    background: #f8f9fa;
+    gap: 10px;
+    background: #fafafa;
 }
 
 /* Nachrichten-Styling */
 .message {
     max-width: 75%;
-    padding: 12px;
+    padding: 10px;
     border-radius: 15px;
     word-wrap: break-word;
     font-size: 14px;
-    line-height: 1.4;
-    position: relative;
-    animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Benutzer-Nachrichten */
 .user {
     align-self: flex-end;
     background: #0078ff;
     color: white;
     text-align: right;
     border-top-right-radius: 0;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Bot-Nachrichten */
 .bot {
     align-self: flex-start;
     background: #e1e1e1;
     color: black;
     text-align: left;
     border-top-left-radius: 0;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Eingabebereich */
@@ -84,8 +73,6 @@ body {
     padding: 10px;
     background: #fff;
     border-top: 1px solid #ddd;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
 }
 
 #user-input {
@@ -94,7 +81,6 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     outline: none;
-    font-size: 14px;
 }
 
 #send-button {
@@ -105,15 +91,8 @@ body {
     border-radius: 5px;
     margin-left: 5px;
     cursor: pointer;
-    font-size: 14px;
 }
 
 #send-button:hover {
     background: #005ecb;
-}
-
-/* Animationen */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
 }
