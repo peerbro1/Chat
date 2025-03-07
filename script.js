@@ -1,53 +1,56 @@
-const chatWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
-const uploadWebhookUrl = "https://corsproxy.io/?https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
+const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
 
-// Chat-Funktion
+document.addEventListener("DOMContentLoaded", () => {
+    const chatbox = document.getElementById("chatbox");
+
+    // Begrüßung automatisch anzeigen
+    const botMessage = document.createElement("div");
+    botMessage.className = "chat-message bot-message";
+    botMessage.textContent = "Moin! 👋 Welche Fragen darf ich dir zu Peer beantworten?";
+    chatbox.appendChild(botMessage);
+});
+
 document.getElementById("sendButton").addEventListener("click", async () => {
-    const userInput = document.getElementById("userInput").value;
+    const userInput = document.getElementById("userInput").value.trim();
     if (!userInput) return;
 
-    document.getElementById("chatbox").innerHTML += `<p><b>Du:</b> ${userInput}</p>`;
+    const chatbox = document.getElementById("chatbox");
+
+    // Nutzer-Eingabe anzeigen
+    const userMessage = document.createElement("div");
+    userMessage.className = "chat-message user-message";
+    userMessage.textContent = userInput;
+    chatbox.appendChild(userMessage);
+    chatbox.scrollTop = chatbox.scrollHeight;
+
     document.getElementById("userInput").value = "";
 
     try {
-        const response = await fetch(chatWebhookUrl, {
+        const response = await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: userInput })
         });
 
+        if (!response.ok) {
+            throw new Error(`Fehler: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
-        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.output || "Fehler bei der Antwort."}</p>`;
+        console.log("Antwort vom Server:", data);
+
+        // Antwort anzeigen
+        const botMessage = document.createElement("div");
+        botMessage.className = "chat-message bot-message";
+        botMessage.textContent = data.output || "Keine Antwort erhalten";
+        chatbox.appendChild(botMessage);
+        chatbox.scrollTop = chatbox.scrollHeight;
     } catch (error) {
         console.error("Fehler beim Abrufen der Antwort:", error);
-        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
-    }
-});
-
-// Upload-Funktion
-document.getElementById("uploadButton").addEventListener("click", async () => {
-    const fileInput = document.getElementById("imageUpload");
-    const file = fileInput.files[0];
-
-    if (!file) {
-        document.getElementById("uploadStatus").innerText = "Bitte eine Datei auswählen.";
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-        const response = await fetch(uploadWebhookUrl, {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok) throw new Error(`HTTP Fehler! Status: ${response.status}`);
-
-        document.getElementById("uploadStatus").innerText = "Upload erfolgreich!";
-    } catch (error) {
-        console.error("Fehler beim Hochladen:", error);
-        document.getElementById("uploadStatus").innerText = "Fehler beim Hochladen.";
+        const errorMessage = document.createElement("div");
+        errorMessage.className = "chat-message bot-message";
+        errorMessage.textContent = "Fehler bei der Verbindung.";
+        chatbox.appendChild(errorMessage);
+        chatbox.scrollTop = chatbox.scrollHeight;
     }
 });
