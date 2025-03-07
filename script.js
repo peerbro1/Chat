@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
@@ -9,14 +9,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const redFlagsList = document.getElementById("redflags-list");
     const statusContainer = document.getElementById("status-container");
 
-    // Webhook-URLs für den Chat und den Datei-Upload
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
-    // Chat senden
+    // Chat-Funktion wieder aktivieren
     sendButton.addEventListener("click", sendMessage);
-    userInput.addEventListener("keypress", function(event) {
-        if (event.key === "Enter") sendMessage();
+    userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
     });
 
     function sendMessage() {
@@ -24,99 +23,75 @@ document.addEventListener("DOMContentLoaded", function() {
         if (message === "") return;
 
         addMessage("user", message);
-        statusContainer.textContent = "Nachricht wird gesendet...";
-        
+
         fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            body: JSON.stringify({ message: message })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message }),
         })
-        .then(response => response.json())
-        .then(data => {
-            addMessage("bot", data.output);
-            statusContainer.textContent = "";
+        .then((response) => response.json())
+        .then((data) => {
+            addMessage("bot", data.reply || "Keine Antwort vom Server.");
         })
-        .catch(error => {
-            console.error("Fehler:", error);
+        .catch((error) => {
             addMessage("bot", "Fehler bei der Verbindung zum Server.");
-            statusContainer.textContent = `Fehler: ${error.message}`;
+            console.error(error);
         });
 
         userInput.value = "";
     }
 
     function addMessage(sender, text) {
-        const messageElement = document.createElement("div");
-        messageElement.classList.add("message", sender);
-        messageElement.textContent = text;
-        chatBox.appendChild(messageElement);
+        const msg = document.createElement("div");
+        msg.className = `message ${sender}`;
+        msg.textContent = text;
+        chatBox.appendChild(msg);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Datei-Upload
     uploadButton.addEventListener("click", uploadFile);
-    fileInput.addEventListener("change", function() {
-        statusContainer.textContent = fileInput.files.length > 0 ? `Ausgewählte Datei: ${fileInput.files[0].name}` : "";
-    });
 
     function uploadFile() {
         const file = fileInput.files[0];
         if (!file) {
-            statusContainer.textContent = "Bitte wähle zuerst eine Datei aus.";
+            statusContainer.textContent = "Bitte Datei auswählen!";
             return;
         }
 
-        statusContainer.textContent = "Datei wird hochgeladen...";
-
         const formData = new FormData();
         formData.append("file", file);
+        statusContainer.textContent = "Lade hoch und analysiere...";
 
         fetch(FILE_WEBHOOK_URL, {
             method: "POST",
-            body: formData
+            body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-            let parsedData;
-            try {
-                parsedData = JSON.parse(data.output);
-            } catch (error) {
-                console.error("Fehler beim Parsen der API-Antwort:", error);
-                return;
-            }
+            .then((response) => response.json())
+            .then((data) => {
+                let parsedData;
 
-            updateLists(parsedData.passende_qualifikationen, parsedData.zu_klaerende_punkte, parsedData.red_flags);
-        })
-        .catch(error => {
-            console.error("Fehler beim Abrufen der API-Daten:", error);
-            statusContainer.textContent = `Fehler: ${error.message}`;
-        });
+                if (typeof data.output === "string") {
+                    parsedData = JSON.parse(data.output);
+                } else {
+                    parsedData = data.output;
+                }
+
+                updateLists(parsedData.passende_qualifikationen, parsedData.zu_klaerende_punkte, parsedData.red_flags);
+                statusContainer.textContent = "Analyse fertig!";
+            })
+            .catch((error) => {
+                console.error(error);
+                statusContainer.textContent = "Fehler: " + error.message;
+            });
     }
 
     function updateLists(matching, open, redFlags) {
-        matchList.innerHTML = "";
-        openList.innerHTML = "";
-        redFlagsList.innerHTML = "";
-
-        matching.forEach(item => {
-            const li = document.createElement("li");
-            li.innerHTML = `<b>${item}</b>`;
-            li.classList.add("green-text");
-            matchList.appendChild(li);
-        });
-
-        open.forEach(item => {
-            const li = document.createElement("li");
-            li.innerHTML = `<b>${item}</b>`;
-            li.classList.add("orange-text");
-            openList.appendChild(li);
-        });
-
-        redFlags.forEach(item => {
-            const li = document.createElement("li");
-            li.innerHTML = `<b>${item}</b>`;
-            li.classList.add("red-text");
-            redFlagsList.appendChild(li);
-        });
+        matchList.innerHTML = matching.map(m => `<li>${m}</li>`).join("");
+        openList.innerHTML = open.map(item => `<li>${item}</li>`).join("");
+        redFlagsList.innerHTML = redFlags.length 
+            ? redFlags.map(item => `<li>${item}</li>`).join("") 
+            : "<li>Keine Red Flags gefunden.</li>";
     }
+
+    uploadButton.addEventListener("click", uploadFile);
 });
