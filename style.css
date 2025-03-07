@@ -34,7 +34,7 @@ body {
 }
 
 #redflags-container {
-    width: 40%; /* Doppelte Breite */
+    width: 40%;
     padding: 15px;
     background: #ffe6e6;
     overflow-y: auto;
