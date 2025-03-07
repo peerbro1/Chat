@@ -37,10 +37,6 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
-            if (!data.passende_qualifikationen || !data.zu_klaerende_punkte || !data.red_flags) {
-                throw new Error("Fehlende Daten in der API-Antwort");
-            }
-
             statusContainer.textContent = "Analyse abgeschlossen!";
             statusContainer.className = "success";
 
@@ -49,33 +45,6 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => {
             statusContainer.textContent = `Fehler: ${error.message}`;
             statusContainer.className = "error";
-        });
-    }
-
-    function updateLists(matching, open, redFlags) {
-        matchList.innerHTML = "";
-        openList.innerHTML = "";
-        redFlagsList.innerHTML = "";
-
-        matching.forEach(item => {
-            const li = document.createElement("li");
-            li.innerHTML = `<b>${item}</b>`;
-            li.classList.add("green-text");
-            matchList.appendChild(li);
-        });
-
-        open.forEach(item => {
-            const li = document.createElement("li");
-            li.innerHTML = `<b>${item}</b>`;
-            li.classList.add("orange-text");
-            openList.appendChild(li);
-        });
-
-        redFlags.forEach(item => {
-            const li = document.createElement("li");
-            li.innerHTML = `<b>${item}</b>`;
-            li.classList.add("red-text");
-            redFlagsList.appendChild(li);
         });
     }
 });

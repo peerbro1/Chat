@@ -11,39 +11,94 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
 }
 
 #main-container {
     display: flex;
     width: 90%;
     max-width: 1400px;
+    height: 700px;
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
+/* Anpassung der Spalten */
 #match-container, #open-container {
-    width: 25%;
+    width: 20%;
     padding: 15px;
     background: #f8f8f8;
     overflow-y: auto;
 }
 
 #redflags-container {
-    width: 50%;
+    width: 40%; /* Doppelte Breite */
     padding: 15px;
     background: #ffe6e6;
     overflow-y: auto;
 }
 
 #chat-container {
-    width: 50%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     padding: 15px;
+    background: white;
+    justify-content: space-between;
 }
 
+/* Chat Header */
+#chat-header {
+    background: #0078ff;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Chat-Feld */
+#chat-box {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Input-Felder */
+#input-container, #upload-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#send-button, #upload-button {
+    padding: 10px;
+    background: #0078ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Qualifikationen & Listen */
 h2 {
     font-weight: bold;
 }
@@ -66,19 +121,6 @@ h2 {
     color: red;
 }
 
-.green-text {
-    color: green;
-}
-
-.orange-text {
-    color: orange;
-}
-
-.red-text {
-    color: red;
-}
-
-/* Responsive Anpassung */
 @media screen and (max-width: 768px) {
     #main-container {
         flex-direction: column;
