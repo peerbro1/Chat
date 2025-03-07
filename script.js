@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadButton = document.getElementById("uploadButton");
     const uploadStatus = document.getElementById("uploadStatus");
 
-    const WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook-test/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a"; // Deine Webhook-URL
+    const WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a"; // Deine Webhook-URL
 
     // Funktion, um eine Nachricht in die Chatbox zu schreiben
     function appendMessage(sender, message, color = "black") {
