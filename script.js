@@ -2,11 +2,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const chatBox = document.getElementById("chat-box");
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
-
-    // Begrüßungsnachricht HINZUFÜGEN beim Laden der Seite
-    setTimeout(() => {
-        addMessage("bot", "👋 Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
-    }, 500);
+    const fileInput = document.getElementById("file-input");
+    const uploadButton = document.getElementById("upload-button");
+    const matchList = document.getElementById("match-list");
+    const openList = document.getElementById("open-list");
 
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function(event) {
@@ -30,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => addMessage("bot", data.output))
-        .catch(() => addMessage("bot", "❌ Fehler bei der Verbindung."));
+        .catch(() => addMessage("bot", "Fehler bei der Verbindung."));
     }
 
     function addMessage(sender, text) {
@@ -39,5 +38,44 @@ document.addEventListener("DOMContentLoaded", function() {
         messageElement.innerHTML = text;
         chatBox.appendChild(messageElement);
         chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Datei hochladen und analysieren
+    uploadButton.addEventListener("click", function() {
+        const file = fileInput.files[0];
+        if (!file) {
+            alert("Bitte wähle eine Datei aus.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("https://peerbro1.app.n8n.cloud/webhook/job-analyse", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            updateLists(data.matching, data.open);
+        })
+        .catch(() => alert("Fehler beim Hochladen."));
+    });
+
+    function updateLists(matching, open) {
+        matchList.innerHTML = "";
+        openList.innerHTML = "";
+
+        matching.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            matchList.appendChild(li);
+        });
+
+        open.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            openList.appendChild(li);
+        });
     }
 });

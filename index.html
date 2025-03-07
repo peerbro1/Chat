@@ -3,18 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>Chatbot mit Jobanalyse</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-header">Peer Meyer-Puttlitz Chatbot</div>
-        <div id="chat-box"></div>
-        <div id="input-container">
-            <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
-            <button id="send-button">Senden</button>
+    <div id="main-container">
+        <!-- Linke Spalte: Passende Qualifikationen -->
+        <div id="match-container">
+            <h2>Passende Qualifikationen</h2>
+            <ul id="match-list"></ul>
+        </div>
+
+        <!-- Mittlere Spalte: Chat -->
+        <div id="chat-container">
+            <div id="chat-header">Chatbot</div>
+            <div id="chat-box"></div>
+            <div id="input-container">
+                <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
+                <button id="send-button">Senden</button>
+            </div>
+            <div id="upload-container">
+                <input type="file" id="file-input">
+                <button id="upload-button">Stellenausschreibung hochladen</button>
+            </div>
+        </div>
+
+        <!-- Rechte Spalte: Klärungsbedarf -->
+        <div id="open-container">
+            <h2>Zu klärende Punkte</h2>
+            <ul id="open-list"></ul>
         </div>
     </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
