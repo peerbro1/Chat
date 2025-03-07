@@ -1,7 +1,7 @@
-/* Allgemeines Styling */
+/* Hintergrund */
 body {
     font-family: "Arial", sans-serif;
-    background-color: #f4f4f4;
+    background: linear-gradient(135deg, #3a7bd5, #3a6073);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,19 +9,20 @@ body {
     margin: 0;
 }
 
-/* Container für den Chat */
+/* Chat-Container */
 #chat-container {
-    width: 450px;
-    height: 650px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 420px;
+    height: 600px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    backdrop-filter: blur(10px);
 }
 
-/* Chat-Header */
+/* Header */
 #chat-header {
     background: #0078ff;
     color: white;
@@ -34,12 +35,12 @@ body {
 /* Chat-Bereich */
 #chat-box {
     flex: 1;
-    padding: 10px;
+    padding: 15px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    background: #fafafa;
+    gap: 12px;
+    background: #f8f9fa;
 }
 
 /* Nachrichten-Styling */
@@ -49,22 +50,29 @@ body {
     border-radius: 15px;
     word-wrap: break-word;
     font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
+/* Benutzer-Nachrichten */
 .user {
     align-self: flex-end;
     background: #0078ff;
     color: white;
     text-align: right;
     border-top-right-radius: 0;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Bot-Nachrichten */
 .bot {
     align-self: flex-start;
     background: #e1e1e1;
     color: black;
     text-align: left;
     border-top-left-radius: 0;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Eingabebereich */
@@ -95,4 +103,10 @@ body {
 
 #send-button:hover {
     background: #005ecb;
+}
+
+/* Animationen */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
