@@ -23,9 +23,14 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message }),
+            body: JSON.stringify({ message })
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Netzwerkfehler");
+            }
+            return response.json();
+        })
         .then((data) => {
             addMessage("bot", data.reply || "Keine Antwort vom Server.");
         })
@@ -59,24 +64,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
         fetch(FILE_WEBHOOK_URL, {
             method: "POST",
-            body: formData,
+            body: formData
         })
-            .then((response) => response.json())
-            .then((data) => {
-                let parsedData = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
-                updateAnalysisTable(parsedData);
-            })
-            .catch((error) => {
-                console.error(error);
-                alert("Fehler beim Hochladen: " + error.message);
-            });
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Fehler beim Hochladen");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            let parsedData = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
+            updateAnalysisTable(parsedData);
+        })
+        .catch((error) => {
+            console.error(error);
+            alert("Fehler beim Hochladen: " + error.message);
+        });
     }
 
     function updateAnalysisTable(data) {
         analysisTable.innerHTML = "";
+        const renamedKeys = {
+            "passende_qualifikationen": "Das passt gut 🤗",
+            "zu_klaerende_punkte": "Sollten wir noch mal anschauen 🧐",
+            "red_flags": "Red Flags? 😧"
+        };
+
         Object.entries(data).forEach(([key, value]) => {
+            const newKey = renamedKeys[key] || key;
             const row = document.createElement("tr");
-            row.innerHTML = `<td>${key}</td><td>${value.join(", ")}</td>`;
+            row.innerHTML = `<td>${newKey}</td><td>${value.join(", ")}</td>`;
             analysisTable.appendChild(row);
         });
     }
