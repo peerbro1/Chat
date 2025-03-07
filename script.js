@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
 
-    // Nachricht an den Chatbot senden
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function(event) {
         if (event.key === "Enter") sendMessage();
@@ -18,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Chatbot-Antwort abrufen
     function fetchChatbotResponse(message) {
         fetch("https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a", {
             method: "POST",
@@ -30,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(() => addMessage("bot", "Fehler bei der Verbindung."));
     }
 
-    // Nachricht in den Chat einfügen
     function addMessage(sender, text) {
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", sender);
