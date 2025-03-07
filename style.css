@@ -6,6 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
+    font-size: 18px;
     background-color: #f4f4f4;
     text-align: center;
 }
@@ -13,7 +14,13 @@ body {
 header {
     background: #0078ff;
     color: white;
-    padding: 20px;
+    padding: 40px;
+    font-size: 20px;
+}
+
+.header-text {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 #main-container {
@@ -26,18 +33,6 @@ header {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-#match-container, #open-container {
-    width: 20%;
-    padding: 20px;
-    background: #f8f8f8;
-}
-
-#redflags-container {
-    width: 40%;
-    padding: 20px;
-    background: #ffe6e6;
-}
-
 #chat-container {
     width: 40%;
     padding: 20px;
@@ -45,20 +40,78 @@ header {
 }
 
 #chat-box {
-    min-height: 200px;
+    min-height: 250px;
     border: 1px solid #ddd;
     padding: 10px;
     background: #fafafa;
 }
 
+.message {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    max-width: 75%;
+}
+
+.message.user {
+    background-color: #d1ecf1;
+    align-self: flex-end;
+}
+
+.message.bot {
+    background-color: #f8d7da;
+    align-self: flex-start;
+}
+
+#input-container {
+    display: flex;
+    margin-top: 10px;
+}
+
+#user-input {
+    flex-grow: 1;
+    padding: 15px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+}
+
 button {
     background: #0078ff;
     color: white;
-    padding: 10px;
+    padding: 15px;
     border: none;
     cursor: pointer;
+    font-size: 18px;
 }
 
-#match-list li { color: green; font-weight: bold; }
-#open-list li { color: orange; font-weight: bold; }
-#redflags-list li { color: red; font-weight: bold; }
+#upload-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#analysis-container {
+    width: 60%;
+    padding: 20px;
+    background: #f8f8f8;
+}
+
+#analysis-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#analysis-table th, #analysis-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#analysis-table th {
+    background-color: #0078ff;
+    color: white;
+}

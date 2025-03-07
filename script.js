@@ -4,15 +4,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const sendButton = document.getElementById("send-button");
     const fileInput = document.getElementById("file-input");
     const uploadButton = document.getElementById("upload-button");
-    const matchList = document.getElementById("match-list");
-    const openList = document.getElementById("open-list");
-    const redFlagsList = document.getElementById("redflags-list");
-    const statusContainer = document.getElementById("status-container");
+    const analysisTable = document.querySelector("#analysis-table tbody");
 
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
-    // Chat-Funktion wieder aktivieren
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendMessage();
@@ -43,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function addMessage(sender, text) {
         const msg = document.createElement("div");
-        msg.className = `message ${sender}`;
+        msg.className = `message bubble ${sender}`;
         msg.textContent = text;
         chatBox.appendChild(msg);
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -54,13 +50,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function uploadFile() {
         const file = fileInput.files[0];
         if (!file) {
-            statusContainer.textContent = "Bitte Datei auswählen!";
+            alert("Bitte Datei auswählen!");
             return;
         }
 
         const formData = new FormData();
         formData.append("file", file);
-        statusContainer.textContent = "Lade hoch und analysiere...";
 
         fetch(FILE_WEBHOOK_URL, {
             method: "POST",
@@ -68,30 +63,21 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then((response) => response.json())
             .then((data) => {
-                let parsedData;
-
-                if (typeof data.output === "string") {
-                    parsedData = JSON.parse(data.output);
-                } else {
-                    parsedData = data.output;
-                }
-
-                updateLists(parsedData.passende_qualifikationen, parsedData.zu_klaerende_punkte, parsedData.red_flags);
-                statusContainer.textContent = "Analyse fertig!";
+                let parsedData = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
+                updateAnalysisTable(parsedData);
             })
             .catch((error) => {
                 console.error(error);
-                statusContainer.textContent = "Fehler: " + error.message;
+                alert("Fehler beim Hochladen: " + error.message);
             });
     }
 
-    function updateLists(matching, open, redFlags) {
-        matchList.innerHTML = matching.map(m => `<li>${m}</li>`).join("");
-        openList.innerHTML = open.map(item => `<li>${item}</li>`).join("");
-        redFlagsList.innerHTML = redFlags.length 
-            ? redFlags.map(item => `<li>${item}</li>`).join("") 
-            : "<li>Keine Red Flags gefunden.</li>";
+    function updateAnalysisTable(data) {
+        analysisTable.innerHTML = "";
+        Object.entries(data).forEach(([key, value]) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${key}</td><td>${value.join(", ")}</td>`;
+            analysisTable.appendChild(row);
+        });
     }
-
-    uploadButton.addEventListener("click", uploadFile);
 });
