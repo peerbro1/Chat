@@ -1,34 +1,32 @@
-const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
 
+// **Chat-Eingabe mit Text oder Datei**
 document.getElementById("sendButton").addEventListener("click", async () => {
-    const userInput = document.getElementById("userInput").value.trim();
-    if (!userInput) return;
-
-    // Nutzer-Eingabe anzeigen
-    document.getElementById("chatbox").innerHTML += `<p><b>Du:</b> ${userInput}</p>`;
+    const userInput = document.getElementById("userInput").value;
+    const fileInput = document.getElementById("imageUpload").files[0];
     document.getElementById("userInput").value = "";
 
+    if (!userInput && !fileInput) return;
+
+    document.getElementById("chatbox").innerHTML += `<p><b>Du:</b> ${userInput || "[Datei gesendet]"}</p>`;
+
     try {
-        // Anfrage an n8n senden
+        let formData = new FormData();
+
+        if (fileInput) {
+            formData.append("file", fileInput);
+        } else {
+            formData.append("message", userInput);
+        }
+
         const response = await fetch(webhookUrl, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: userInput })
+            body: formData
         });
 
-        if (!response.ok) {
-            throw new Error(`Fehler: ${response.status} ${response.statusText}`);
-        }
-
         const data = await response.json();
-        console.log("Antwort vom Server:", data);
+        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.reply || "Upload erfolgreich!"}</p>`;
 
-        // Antwort anzeigen
-        if (data.output) {
-            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.output}</p>`;
-        } else {
-            document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> (Keine Antwort erhalten)</p>`;
-        }
     } catch (error) {
         console.error("Fehler beim Abrufen der Antwort:", error);
         document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
