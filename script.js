@@ -1,5 +1,6 @@
-const chatWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";  // Chatbot Webhook
-const uploadWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a"; // Upload Webhook
+// Webhook-URLs mit CORS-Proxy
+const chatWebhookUrl = "https://corsproxy.io/?https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+const uploadWebhookUrl = "https://corsproxy.io/?https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
 
 // Begrüßung des Chatbots
 document.addEventListener("DOMContentLoaded", () => {
