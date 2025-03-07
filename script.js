@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const formData = new FormData();
         formData.append("file", file);
 
-        fetch("https://peerbro1.app.n8n.cloud/webhook/000e7a64-4208-455c-a68f-50deeb0230d8", {
+        fetch("https://https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f", {
             method: "POST",
             body: formData
         })
