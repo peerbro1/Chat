@@ -3,8 +3,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
 
-    // Begrüßungsnachricht direkt anzeigen
-    addMessage("bot", "👋 Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
+    // Begrüßungsnachricht direkt einfügen
+    setTimeout(() => {
+        addMessage("bot", "👋 Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
+    }, 500);
 
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function(event) {
@@ -39,4 +41,3 @@ document.addEventListener("DOMContentLoaded", function() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 });
-

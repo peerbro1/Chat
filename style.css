@@ -55,6 +55,7 @@ body {
     font-size: 14px;
     line-height: 1.4;
     position: relative;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 /* Benutzer-Nachrichten */
@@ -109,4 +110,10 @@ body {
 
 #send-button:hover {
     background: #005ecb;
+}
+
+/* Animationen */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
