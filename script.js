@@ -1,34 +1,71 @@
-const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
+const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
 
-// **Chat-Eingabe mit Text oder Datei**
 document.getElementById("sendButton").addEventListener("click", async () => {
-    const userInput = document.getElementById("userInput").value;
-    const fileInput = document.getElementById("imageUpload").files[0];
+    const userInput = document.getElementById("userInput").value.trim();
+    if (!userInput) return;
+
+    // Nutzer-Eingabe anzeigen
+    document.getElementById("chatbox").innerHTML += `<p><b>Du:</b> ${userInput}</p>`;
     document.getElementById("userInput").value = "";
 
-    if (!userInput && !fileInput) return;
-
-    document.getElementById("chatbox").innerHTML += `<p><b>Du:</b> ${userInput || "[Datei gesendet]"}</p>`;
-
     try {
-        let formData = new FormData();
+        // Anfrage an n8n senden
+        const response = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "message", message: userInput })
+        });
 
-        if (fileInput) {
-            formData.append("file", fileInput);
-        } else {
-            formData.append("message", userInput);
+        if (!response.ok) {
+            throw new Error(`Fehler: ${response.status} ${response.statusText}`);
         }
 
+        const data = await response.json();
+        console.log("Antwort vom Server:", data);
+
+        // Antwort anzeigen
+        if (data.output) {
+            document.getElementById("chatbox").innerHTML += `<p style="color:blue;"><b>Chatbot:</b> ${data.output}</p>`;
+        } else {
+            document.getElementById("chatbox").innerHTML += `<p style="color:blue;"><b>Chatbot:</b> (Keine Antwort erhalten)</p>`;
+        }
+    } catch (error) {
+        console.error("Fehler beim Abrufen der Antwort:", error);
+        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
+    }
+});
+
+// Datei-Upload
+document.getElementById("uploadButton").addEventListener("click", async () => {
+    const fileInput = document.getElementById("imageUpload");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Bitte wähle eine Datei aus.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("type", "file");
+    formData.append("file", file);
+
+    try {
         const response = await fetch(webhookUrl, {
             method: "POST",
             body: formData
         });
 
-        const data = await response.json();
-        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.reply || "Upload erfolgreich!"}</p>`;
+        if (!response.ok) {
+            throw new Error(`Fehler: ${response.status} ${response.statusText}`);
+        }
 
+        const data = await response.json();
+        console.log("Upload-Antwort:", data);
+
+        // Erfolgsmeldung im Chat anzeigen
+        document.getElementById("chatbox").innerHTML += `<p style="color:green;"><b>System:</b> Datei erfolgreich hochgeladen!</p>`;
     } catch (error) {
-        console.error("Fehler beim Abrufen der Antwort:", error);
-        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
+        console.error("Fehler beim Hochladen:", error);
+        document.getElementById("chatbox").innerHTML += `<p style="color:red;"><b>System:</b> Fehler beim Hochladen der Datei.</p>`;
     }
 });
