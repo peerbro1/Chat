@@ -37,12 +37,9 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("API Antwort (Rohdaten):", data);
-
             let parsedData;
             try {
                 parsedData = JSON.parse(data.output);
-                console.log("Geparste API Antwort:", parsedData);
             } catch (error) {
                 console.error("Fehler beim Parsen der API-Antwort:", error);
                 throw new Error("Fehlerhafte JSON-Struktur in der API-Antwort");
