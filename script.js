@@ -25,18 +25,21 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message })
         })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Netzwerkfehler");
-            }
+        .then(response => {
+            console.log("Antwort-Status:", response.status);
             return response.json();
         })
-        .then((data) => {
-            addMessage("bot", data.reply || "Keine Antwort vom Server.");
+        .then(data => {
+            console.log("Antwort-Body:", data);
+            if (data && data.output) {
+                addMessage("bot", data.output);
+            } else {
+                addMessage("bot", "Fehler: Keine gültige Antwort erhalten.");
+            }
         })
-        .catch((error) => {
+        .catch(error => {
+            console.error("Fetch-Fehler:", error);
             addMessage("bot", "Fehler bei der Verbindung zum Server.");
-            console.error(error);
         });
 
         userInput.value = "";
@@ -66,17 +69,17 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             body: formData
         })
-        .then((response) => {
+        .then(response => {
             if (!response.ok) {
                 throw new Error("Fehler beim Hochladen");
             }
             return response.json();
         })
-        .then((data) => {
+        .then(data => {
             let parsedData = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
             updateAnalysisTable(parsedData);
         })
-        .catch((error) => {
+        .catch(error => {
             console.error(error);
             alert("Fehler beim Hochladen: " + error.message);
         });
