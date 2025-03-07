@@ -40,10 +40,13 @@ header {
 }
 
 #chat-box {
-    min-height: 250px;
+    height: 300px; /* Feste Höhe */
     border: 1px solid #ddd;
     padding: 10px;
     background: #fafafa;
+    overflow-y: auto; /* Scrollbar aktivieren */
+    display: flex;
+    flex-direction: column;
 }
 
 .message {

@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
         msg.className = `message bubble ${sender}`;
         msg.textContent = text;
         chatBox.appendChild(msg);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll immer zum neuesten Eintrag
     }
 
     uploadButton.addEventListener("click", uploadFile);
