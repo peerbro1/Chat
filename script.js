@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const userInput = document.getElementById("user-input");
     const sendButton = document.getElementById("send-button");
 
-    // Begrüßungsnachricht beim Laden der Seite
-    addMessage("bot", "Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
+    // Begrüßungsnachricht direkt anzeigen
+    addMessage("bot", "👋 Moin! Ich bin dein Chatbot für Fragen zu Peer Meyer-Puttlitz. Frag mich alles, was du wissen möchtest!");
 
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", function(event) {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => addMessage("bot", data.output))
-        .catch(() => addMessage("bot", "Fehler bei der Verbindung."));
+        .catch(() => addMessage("bot", "❌ Fehler bei der Verbindung."));
     }
 
     function addMessage(sender, text) {
