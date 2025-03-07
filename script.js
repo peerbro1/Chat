@@ -37,17 +37,30 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
-            console.log("API Antwort:", data);
-
-            if (!data.passende_qualifikationen || !data.zu_klaerende_punkte || !data.red_flags) {
+            console.log("API Antwort (Rohdaten):", data);
+        
+            // JSON-String aus "output" parsen
+            let parsedData;
+            try {
+                parsedData = JSON.parse(data.output);
+                console.log("Geparste API Antwort:", parsedData);
+            } catch (error) {
+                console.error("Fehler beim Parsen der API-Antwort:", error);
+                throw new Error("Fehlerhafte JSON-Struktur in der API-Antwort");
+            }
+        
+            if (!parsedData.passende_qualifikationen || !parsedData.zu_klaerende_punkte || !parsedData.red_flags) {
                 throw new Error("Fehlende Daten in der API-Antwort");
             }
-
-            statusContainer.textContent = "Analyse abgeschlossen!";
-            statusContainer.className = "success";
-
-            updateLists(data.passende_qualifikationen, data.zu_klaerende_punkte, data.red_flags);
+        
+            updateLists(parsedData.passende_qualifikationen, parsedData.zu_klaerende_punkte, parsedData.red_flags);
         })
+        .catch(error => {
+            console.error("Fehler beim Abrufen der API-Daten:", error);
+            statusContainer.textContent = `Fehler: ${error.message}`;
+            statusContainer.className = "error";
+        });
+        
         .catch(error => {
             console.error("Fehler beim Abrufen der API-Daten:", error);
             statusContainer.textContent = `Fehler: ${error.message}`;
