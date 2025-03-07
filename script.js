@@ -1,6 +1,7 @@
-// === Chatbot-Integration ===
-const webhookUrl = "https://peerbro1.app.n8n.cloud/webhook-test/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+const chatWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
+const uploadWebhookUrl = "https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
 
+// Chat-Funktion
 document.getElementById("sendButton").addEventListener("click", async () => {
     const userInput = document.getElementById("userInput").value;
     if (!userInput) return;
@@ -9,36 +10,32 @@ document.getElementById("sendButton").addEventListener("click", async () => {
     document.getElementById("userInput").value = "";
 
     try {
-        const response = await fetch(webhookUrl, {
+        const response = await fetch(chatWebhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: userInput })
         });
 
         const data = await response.json();
-        document.getElementById("chatbox").innerHTML += `<p class="bot-response"><b>Chatbot:</b> ${data.reply}</p>`;
+        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.output || "Fehler bei der Antwort."}</p>`;
     } catch (error) {
         console.error("Fehler beim Abrufen der Antwort:", error);
-        document.getElementById("chatbox").innerHTML += `<p class="error"><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
+        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> Fehler bei der Verbindung.</p>`;
     }
 });
 
-// === Datei-Upload Integration ===
-const uploadWebhookUrl = "https://corsproxy.io/?https://peerbro1.app.n8n.cloud/webhook/3eab9c4f-c20b-4432-adcd-095e94f0d84a";
-
+// Upload-Funktion
 document.getElementById("uploadButton").addEventListener("click", async () => {
     const fileInput = document.getElementById("imageUpload");
     const file = fileInput.files[0];
 
     if (!file) {
-        document.getElementById("uploadStatus").textContent = "Bitte wähle eine Datei aus.";
+        document.getElementById("uploadStatus").innerText = "Bitte eine Datei auswählen.";
         return;
     }
 
     const formData = new FormData();
     formData.append("file", file);
-
-    document.getElementById("uploadStatus").textContent = "Lade hoch...";
 
     try {
         const response = await fetch(uploadWebhookUrl, {
@@ -46,11 +43,11 @@ document.getElementById("uploadButton").addEventListener("click", async () => {
             body: formData
         });
 
-        if (!response.ok) throw new Error("Fehler beim Upload");
+        if (!response.ok) throw new Error(`HTTP Fehler! Status: ${response.status}`);
 
-        document.getElementById("uploadStatus").textContent = "Upload erfolgreich!";
+        document.getElementById("uploadStatus").innerText = "Upload erfolgreich!";
     } catch (error) {
-        document.getElementById("uploadStatus").textContent = "Fehler beim Hochladen.";
-        console.error("Upload-Fehler:", error);
+        console.error("Fehler beim Hochladen:", error);
+        document.getElementById("uploadStatus").innerText = "Fehler beim Hochladen.";
     }
 });
