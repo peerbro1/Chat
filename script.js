@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const uploadButton = document.getElementById("upload-button");
     const matchList = document.getElementById("match-list");
     const openList = document.getElementById("open-list");
+    const redFlagsList = document.getElementById("redflags-list");
     const statusContainer = document.getElementById("status-container");
 
     // Webhook-URLs
@@ -20,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     uploadButton.addEventListener("click", uploadFile);
     
-    // Optional: Dateiname anzeigen, wenn eine Datei ausgewählt wurde
     fileInput.addEventListener("change", function() {
         if (fileInput.files.length > 0) {
             statusContainer.textContent = `Ausgewählte Datei: ${fileInput.files[0].name}`;
@@ -30,51 +30,36 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Nachricht senden
     function sendMessage() {
         const message = userInput.value.trim();
         if (message !== "") {
             addMessage("user", message);
-            
-            // Status aktualisieren
             statusContainer.textContent = "Nachricht wird gesendet...";
             statusContainer.className = "loading";
-            
-            // Chatbot-Antwort abrufen
             fetchChatbotResponse(message);
             userInput.value = "";
         }
     }
 
-    // Chatbot-Antwort vom Webhook abrufen
     function fetchChatbotResponse(message) {
         fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
             body: JSON.stringify({ message: message })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Serverfehler: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             addMessage("bot", data.output);
             statusContainer.textContent = "";
         })
         .catch(error => {
-            console.error("Fehler bei der API-Anfrage:", error);
-            addMessage("bot", "Es gab ein Problem bei der Verbindung zum Server. Bitte versuche es später noch einmal.");
+            console.error("Fehler:", error);
+            addMessage("bot", "Fehler bei der Verbindung zum Server.");
             statusContainer.textContent = `Fehler: ${error.message}`;
             statusContainer.className = "error";
         });
     }
 
-    // Nachricht zur Chat-Box hinzufügen
     function addMessage(sender, text) {
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", sender);
@@ -83,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Datei hochladen
     function uploadFile() {
         const file = fileInput.files[0];
         if (!file) {
@@ -93,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        // Überprüfen, ob es sich um eine PDF-Datei handelt
         if (file.type !== "application/pdf") {
             statusContainer.textContent = "Nur PDF-Dateien werden unterstützt.";
             statusContainer.className = "error";
@@ -101,79 +84,57 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
 
-        // Status aktualisieren
         statusContainer.textContent = "Datei wird hochgeladen...";
         statusContainer.className = "loading";
         addMessage("bot", "Datei wird hochgeladen und analysiert...");
 
-        // FormData für Datei-Upload erstellen
         const formData = new FormData();
         formData.append("file", file);
 
-        // Datei zum Webhook senden
         fetch(FILE_WEBHOOK_URL, {
             method: "POST",
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Serverfehler: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            // Status aktualisieren
-            statusContainer.textContent = "Datei erfolgreich hochgeladen!";
+            statusContainer.textContent = "Analyse abgeschlossen!";
             statusContainer.className = "success";
-            
-            // Erfolgsnachricht im Chat anzeigen
-            addMessage("bot", "📄 Die Stellenausschreibung wurde erfolgreich hochgeladen und analysiert!");
-            
-            // Listen mit den Ergebnissen aktualisieren
-            updateLists(data.matching, data.open);
+            addMessage("bot", "📄 Die Stellenausschreibung wurde analysiert!");
+
+            updateLists(data.passende_qualifikationen, data.zu_klaerende_punkte, data.red_flags);
         })
         .catch(error => {
-            console.error("Fehler beim Datei-Upload:", error);
-            statusContainer.textContent = `Fehler beim Upload: ${error.message}`;
+            console.error("Fehler beim Upload:", error);
+            statusContainer.textContent = `Fehler: ${error.message}`;
             statusContainer.className = "error";
-            addMessage("bot", "❌ Fehler beim Hochladen der Datei. Bitte versuche es erneut oder kontaktiere den Support.");
+            addMessage("bot", "❌ Fehler beim Hochladen der Datei.");
         });
     }
 
-    // Listen für Qualifikationen und offene Punkte aktualisieren
-    function updateLists(matching, open) {
-        // Listen leeren
+    function updateLists(matching, open, redFlags) {
         matchList.innerHTML = "";
         openList.innerHTML = "";
+        redFlagsList.innerHTML = "";
 
-        // Wenn keine Daten vorhanden sind
-        if (!matching || !Array.isArray(matching)) {
+        matching?.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = "Keine passenden Qualifikationen gefunden.";
+            li.textContent = item;
             matchList.appendChild(li);
-        } else {
-            // Passende Qualifikationen hinzufügen
-            matching.forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = item;
-                matchList.appendChild(li);
-            });
-        }
+        });
 
-        if (!open || !Array.isArray(open)) {
+        open?.forEach(item => {
             const li = document.createElement("li");
-            li.textContent = "Keine offenen Punkte gefunden.";
+            li.textContent = item;
             openList.appendChild(li);
-        } else {
-            // Offene Punkte hinzufügen
-            open.forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = item;
-                openList.appendChild(li);
-            });
-        }
+        });
+
+        redFlags?.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            li.style.color = "red";
+            redFlagsList.appendChild(li);
+        });
     }
 
-    // Initialisierung: Begrüßungsnachricht anzeigen
-    addMessage("bot", "Hallo! Ich bin dein Jobanalyse-Chatbot. Lade eine Stellenausschreibung hoch, um zu sehen, welche Qualifikationen du bereits erfüllst und welche Punkte noch zu klären sind. Du kannst mir auch Fragen zum Bewerbungsprozess stellen.");
+    addMessage("bot", "Hallo! Lade eine Stellenausschreibung hoch, um deine Chancen zu prüfen.");
 });
