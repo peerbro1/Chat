@@ -40,26 +40,29 @@ document.addEventListener("DOMContentLoaded", function() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Datei hochladen und analysieren
+    // Datei hochladen – NEUER WEBHOOK!
     uploadButton.addEventListener("click", function() {
         const file = fileInput.files[0];
         if (!file) {
-            alert("Bitte wähle eine Datei aus.");
+            addMessage("bot", "Bitte wähle eine Datei aus.");
             return;
         }
 
         const formData = new FormData();
         formData.append("file", file);
 
-        fetch("https://peerbro1.app.n8n.cloud/webhook/job-analyse", {
+        fetch("https://peerbro1.app.n8n.cloud/webhook/000e7a64-4208-455c-a68f-50deeb0230d8", {
             method: "POST",
             body: formData
         })
         .then(response => response.json())
         .then(data => {
+            addMessage("bot", "📄 Datei erfolgreich hochgeladen!");
             updateLists(data.matching, data.open);
         })
-        .catch(() => alert("Fehler beim Hochladen."));
+        .catch(() => {
+            addMessage("bot", "❌ Fehler beim Hochladen der Datei.");
+        });
     });
 
     function updateLists(matching, open) {
