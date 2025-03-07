@@ -58,3 +58,4 @@ document.getElementById("uploadButton").addEventListener("click", async () => {
         document.getElementById("chatbox").innerHTML += `<p style="color:red;"><b>System:</b> Fehler beim Hochladen der Datei.</p>`;
     }
 });
+
