@@ -49,30 +49,6 @@ body {
     justify-content: space-between;
 }
 
-/* Chat Header */
-#chat-header {
-    background: #0078ff;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 8px 8px 0 0;
-}
-
-/* Chat-Feld */
-#chat-box {
-    flex-grow: 1;
-    padding: 10px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    background: #fafafa;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #e0e0e0;
-}
-
 /* Input-Felder */
 #input-container, #upload-container {
     display: flex;
@@ -98,28 +74,10 @@ body {
     font-weight: bold;
 }
 
-/* Qualifikationen & Listen */
-h2 {
-    font-weight: bold;
-}
-
-#match-list li {
-    border-left: 3px solid green;
-    font-weight: bold;
-    color: green;
-}
-
-#open-list li {
-    border-left: 3px solid orange;
-    font-weight: bold;
-    color: orange;
-}
-
-#redflags-list li {
-    border-left: 3px solid red;
-    font-weight: bold;
-    color: red;
-}
+/* Listen */
+#match-list li { color: green; font-weight: bold; }
+#open-list li { color: orange; font-weight: bold; }
+#redflags-list li { color: red; font-weight: bold; }
 
 @media screen and (max-width: 768px) {
     #main-container {
