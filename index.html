@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bewerbungshilfe Chatbot</title>
+    <title>Peer Meyer-Puttlitz Bewerber-Chatbot</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Willkommen beim Bewerber-Chatbot von Peer Meyer-Puttlitz </h1>
-    
+    <h1>Willkommen beim Peer Meyer-Puttlitz Bewerber-Chatbot</h1>
+
     <div id="chat-info">
         <p>Dieser Chatbot hilft dabei, offene Fragen zu meiner Person zu beantworten und herauszufinden, ob ich zu eurer vakanten Stelle passe.</p>
-        <p>Dem Chatbot liegen umfangreiche Informationen über mich vor. Ich habe diesen Bot selbst entwickelt und versuche diesen stets zu verbessern.</p>
-        <p>Falls dennoch etwas unklar bleibt, stehe ich natürlich gerne für ein persönliches Gespräch zur Verfügung.</p>
+        <p>Dem Chatbot liegen umfangreiche Informationen über mich vor. Falls dennoch etwas unklar bleibt, stehe ich gerne für ein persönliches Gespräch zur Verfügung.</p>
     </div>
+
+    <h2>Job-Ausschreibung hochladen</h2>
+    <p>Lade hier ein Bild der Jobbeschreibung hoch, um es mit meinem Profil zu vergleichen.</p>
+
+    <input type="file" id="imageUpload" accept="image/*">
+    <button id="uploadButton">Hochladen</button>
+    <p id="uploadStatus"></p>
 
     <div id="chat-container">
         <div id="chatbox"></div>
