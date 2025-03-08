@@ -4,12 +4,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const sendButton = document.getElementById("send-button");
     const fileInput = document.getElementById("file-input");
     const uploadButton = document.getElementById("upload-button");
-    const analysisResults = document.getElementById("analysis-results");
-    const uploadStatus = document.getElementById("upload-status");
+    const matchList = document.getElementById("match-list");
+    const openList = document.getElementById("open-list");
+    const redFlagsList = document.getElementById("redflags-list");
+    const statusContainer = document.getElementById("status-container");
 
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
+    // Chat-Funktion wieder aktivieren
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendMessage();
@@ -24,16 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ message }),
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Chat-Antwort:", data); // Debug-Ausgabe
-            addMessage("bot", data.output || "Fehler: Keine Antwort erhalten.");
+        .then((response) => response.json())
+        .then((data) => {
+            addMessage("bot", data.reply || "Keine Antwort vom Server.");
         })
-        .catch(error => {
-            console.error("Chat Fehler:", error);
-            addMessage("bot", "❌ Fehler bei der Verbindung zum Server.");
+        .catch((error) => {
+            addMessage("bot", "Fehler bei der Verbindung zum Server.");
+            console.error(error);
         });
 
         userInput.value = "";
@@ -52,63 +54,44 @@ document.addEventListener("DOMContentLoaded", function () {
     function uploadFile() {
         const file = fileInput.files[0];
         if (!file) {
-            alert("Bitte Datei auswählen!");
+            statusContainer.textContent = "Bitte Datei auswählen!";
             return;
         }
-
-        uploadStatus.innerHTML = "📂 Datei wird hochgeladen... Bitte warten.";
 
         const formData = new FormData();
         formData.append("file", file);
+        statusContainer.textContent = "Lade hoch und analysiere...";
 
         fetch(FILE_WEBHOOK_URL, {
             method: "POST",
-            body: formData
+            body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Upload-Response:", data); // Debugging: API-Antwort anzeigen
+            .then((response) => response.json())
+            .then((data) => {
+                let parsedData;
 
-            if (!data || !data.output) {
-                uploadStatus.innerHTML = "❌ Fehler: Keine Analyse-Daten erhalten.";
-                return;
-            }
+                if (typeof data.output === "string") {
+                    parsedData = JSON.parse(data.output);
+                } else {
+                    parsedData = data.output;
+                }
 
-            uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen! Die Analyse läuft...";
-            setTimeout(() => {
-                displayAnalysisResults(data.output);
-                uploadStatus.innerHTML = "✅ Analyse abgeschlossen!";
-            }, 2000);
-        })
-        .catch(error => {
-            console.error("Upload Fehler:", error);
-            uploadStatus.innerHTML = "❌ Fehler beim Hochladen.";
-        });
+                updateLists(parsedData.passende_qualifikationen, parsedData.zu_klaerende_punkte, parsedData.red_flags);
+                statusContainer.textContent = "Analyse fertig!";
+            })
+            .catch((error) => {
+                console.error(error);
+                statusContainer.textContent = "Fehler: " + error.message;
+            });
     }
 
-    function displayAnalysisResults(data) {
-        console.log("Empfangene Analyse-Daten:", data); // Debugging
-
-        analysisResults.innerHTML = ""; // Vorherige Ergebnisse löschen
-
-        if (!data || Object.keys(data).length === 0) {
-            analysisResults.innerHTML = "<p>❌ Keine Analyse-Ergebnisse gefunden.</p>";
-            return;
-        }
-
-        const categories = {
-            "passende_qualifikationen": { label: "✅ Das passt gut:", color: "green" },
-            "zu_klaerende_punkte": { label: "🧐 Sollten wir noch mal anschauen:", color: "orange" },
-            "red_flags": { label: "❌ Red Flags:", color: "red" }
-        };
-
-        Object.entries(data).forEach(([key, value]) => {
-            if (!categories[key]) return;
-
-            const div = document.createElement("div");
-            div.className = `analysis-box ${categories[key].color}`;
-            div.innerHTML = `<strong>${categories[key].label}</strong> ${Array.isArray(value) ? value.join(", ") : value}`;
-            analysisResults.appendChild(div);
-        });
+    function updateLists(matching, open, redFlags) {
+        matchList.innerHTML = matching.map(m => `<li>${m}</li>`).join("");
+        openList.innerHTML = open.map(item => `<li>${item}</li>`).join("");
+        redFlagsList.innerHTML = redFlags.length 
+            ? redFlags.map(item => `<li>${item}</li>`).join("") 
+            : "<li>Keine Red Flags gefunden.</li>";
     }
+
+    uploadButton.addEventListener("click", uploadFile);
 });
