@@ -17,7 +17,7 @@
                 <li>🔹 Lade eine Stellenausschreibung als PDF hoch – Der Abgleich zeigt, wie gut mein Profil passt.</li>
                 <li>🔹 Klare Einschätzung – Welche Anforderungen erfülle ich, wo gibt es Entwicklungspotenzial?</li>
             </ul>
-            <p>Nutze diese Möglichkeit, um unkompliziert und effizient herauszufinden, ob ich zu deiner offenen Position passe. Ich freue mich darauf, mich in einem persönlichen Gespräch näher vorzustellen!</p>
+            <p>Nutze diese Möglichkeit, um unkompliziert herauszufinden, ob ich zu deiner offenen Position passe. Ich freue mich auf ein persönliches Gespräch!</p>
         </div>
     </header>
 
@@ -40,12 +40,14 @@
     <section id="upload-container">
         <h3>📂 Stellenausschreibung hochladen</h3>
         <p>Lade hier die PDF der Stellenbeschreibung hoch, um den automatischen Abgleich zu starten.</p>
-
+        
         <label class="custom-file-upload">
             <input type="file" id="file-input" accept=".pdf">
             📎 Datei auswählen
         </label>
         <button id="upload-button">📤 Datei hochladen</button>
+
+        <div id="upload-status"></div>
     </section>
 
     <script src="script.js"></script>

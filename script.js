@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fileInput = document.getElementById("file-input");
     const uploadButton = document.getElementById("upload-button");
     const analysisResults = document.getElementById("analysis-results");
+    const uploadStatus = document.getElementById("upload-status");
 
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
@@ -27,10 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            addMessage("bot", data.output || "Fehler: Keine gültige Antwort erhalten.");
+            addMessage("bot", data.output || "Fehler: Keine Antwort erhalten.");
         })
         .catch(() => {
-            addMessage("bot", "Fehler bei der Verbindung zum Server.");
+            addMessage("bot", "❌ Fehler bei der Verbindung zum Server.");
         });
 
         userInput.value = "";
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        addMessage("bot", "📂 Datei wird hochgeladen... Bitte einen Moment Geduld.");
+        uploadStatus.innerHTML = "📂 Datei wird hochgeladen... Bitte warten.";
 
         const formData = new FormData();
         formData.append("file", file);
@@ -64,14 +65,14 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            addMessage("bot", "🔄 Die Analyse läuft... Einen Moment bitte.");
+            uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen! Die Analyse läuft...";
             setTimeout(() => {
                 updateAnalysisResults(data.output);
-                addMessage("bot", "✅ Die Analyse ist abgeschlossen. Schau dir die Ergebnisse an!");
+                uploadStatus.innerHTML = "✅ Analyse abgeschlossen!";
             }, 2000);
         })
         .catch(() => {
-            addMessage("bot", "Fehler beim Hochladen.");
+            uploadStatus.innerHTML = "❌ Fehler beim Hochladen.";
         });
     }
 
