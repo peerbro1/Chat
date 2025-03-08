@@ -10,16 +10,18 @@
 
     <header>
         <h1>Bewerbungs-Chatbot</h1>
-        <br>
         <div class="header-text">
-            <p>Hallo, ich bin Peer Meyer-Puttlitz und habe diesen Chatbot entwickelt, um Bewerbungsprozesse zu optimieren.</p>
-            <br>
-            <p>Lade eine Stellenausschreibung als PDF hoch, und der Chatbot gleicht automatisch die Qualifikationen mit deinen Fähigkeiten ab.</p>
+            <p>Willkommen! Hier kannst du schnell und direkt mehr über mich erfahren.</p>
+            <ul>
+                <li>🔹 Stelle deine Fragen im Chat – Erfahre mehr über meine Qualifikationen, Erfahrung und Stärken.</li>
+                <li>🔹 Lade eine Stellenausschreibung als PDF hoch – Der Abgleich zeigt, wie gut mein Profil passt.</li>
+                <li>🔹 Klare Einschätzung – Welche Anforderungen erfülle ich, wo gibt es Entwicklungspotenzial?</li>
+            </ul>
+            <p>Nutze diese Möglichkeit, um unkompliziert und effizient herauszufinden, ob ich zu deiner offenen Position passe. Ich freue mich darauf, mich in einem persönlichen Gespräch näher vorzustellen!</p>
         </div>
     </header>
 
     <div id="main-container">
-        <!-- Mittlere Spalte: Chat -->
         <div id="chat-container">
             <h2>💬 Chat mit dem Bewerbungsbot</h2>
             <div id="chat-box"></div>
@@ -30,25 +32,20 @@
             </div>
         </div>
 
-        <!-- Rechte Spalte: Qualifikationen & Analyse -->
         <div id="analysis-container">
             <h2>📊 Abgleich der Stellenausschreibung mit Peers Qualifikationen</h2>
-            <table id="analysis-table">
-                <thead>
-                    <tr>
-                        <th>Kategorie</th>
-                        <th>Inhalt</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div id="analysis-results"></div>
         </div>
     </div>
 
     <div id="upload-container">
         <h3>📂 Stellenausschreibung hochladen</h3>
         <p>Lade hier die PDF der Stellenbeschreibung hoch, um den automatischen Abgleich zu starten.</p>
-        <input type="file" id="file-input" accept=".pdf">
+        
+        <label class="custom-file-upload">
+            <input type="file" id="file-input" accept=".pdf">
+            Datei auswählen
+        </label>
         <button id="upload-button">Datei hochladen</button>
     </div>
 

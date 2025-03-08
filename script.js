@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sendButton = document.getElementById("send-button");
     const fileInput = document.getElementById("file-input");
     const uploadButton = document.getElementById("upload-button");
-    const analysisTable = document.querySelector("#analysis-table tbody");
+    const analysisResults = document.getElementById("analysis-results");
 
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
@@ -25,20 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message })
         })
-        .then(response => {
-            console.log("Antwort-Status:", response.status);
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log("Antwort-Body:", data);
-            if (data && data.output) {
-                addMessage("bot", data.output);
-            } else {
-                addMessage("bot", "Fehler: Keine gültige Antwort erhalten.");
-            }
+            addMessage("bot", data.output || "Fehler: Keine gültige Antwort erhalten.");
         })
-        .catch(error => {
-            console.error("Fetch-Fehler:", error);
+        .catch(() => {
             addMessage("bot", "Fehler bei der Verbindung zum Server.");
         });
 
@@ -50,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         msg.className = `message bubble ${sender}`;
         msg.textContent = text;
         chatBox.appendChild(msg);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll immer zum neuesten Eintrag
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     uploadButton.addEventListener("click", uploadFile);
@@ -62,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        addMessage("bot", "📂 Datei wird hochgeladen... Bitte einen Moment Geduld.");
+
         const formData = new FormData();
         formData.append("file", file);
 
@@ -69,35 +62,33 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "POST",
             body: formData
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Fehler beim Hochladen");
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            let parsedData = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
-            updateAnalysisTable(parsedData);
+            addMessage("bot", "🔄 Die Analyse läuft... Einen Moment bitte.");
+            setTimeout(() => {
+                updateAnalysisResults(data.output);
+                addMessage("bot", "✅ Die Analyse ist abgeschlossen. Schau dir die Ergebnisse an!");
+            }, 2000);
         })
-        .catch(error => {
-            console.error(error);
-            alert("Fehler beim Hochladen: " + error.message);
+        .catch(() => {
+            addMessage("bot", "Fehler beim Hochladen.");
         });
     }
 
-    function updateAnalysisTable(data) {
-        analysisTable.innerHTML = "";
-        const renamedKeys = {
-            "passende_qualifikationen": "Das passt gut 🤗",
-            "zu_klaerende_punkte": "Sollten wir noch mal anschauen 🧐",
-            "red_flags": "Red Flags? 😧"
+    function updateAnalysisResults(data) {
+        analysisResults.innerHTML = "";
+
+        const categories = {
+            "passende_qualifikationen": { label: "Das passt gut 🤗", color: "green" },
+            "zu_klaerende_punkte": { label: "Sollten wir noch mal anschauen 🧐", color: "orange" },
+            "red_flags": { label: "Red Flags? 😧", color: "red" }
         };
 
         Object.entries(data).forEach(([key, value]) => {
-            const newKey = renamedKeys[key] || key;
-            const row = document.createElement("tr");
-            row.innerHTML = `<td>${newKey}</td><td>${value.join(", ")}</td>`;
-            analysisTable.appendChild(row);
+            const div = document.createElement("div");
+            div.className = `bubble ${categories[key].color}`;
+            div.innerHTML = `<strong>${categories[key].label}:</strong> ${value.join(", ")}`;
+            analysisResults.appendChild(div);
         });
     }
 });

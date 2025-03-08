@@ -5,116 +5,67 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 18px;
-    background-color: #f4f4f4;
+    background-color: #f5f5f5;
     text-align: center;
+    color: #333;
 }
 
 header {
-    background: #0078ff;
+    background: #0056b3;
     color: white;
     padding: 40px;
-    font-size: 20px;
 }
 
-.header-text {
-    max-width: 800px;
-    margin: 0 auto;
+.header-text ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.header-text li {
+    margin: 10px 0;
 }
 
 #main-container {
     display: flex;
-    width: 90%;
-    max-width: 1400px;
+    justify-content: space-between;
     margin: 20px auto;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1200px;
 }
 
-#chat-container {
-    width: 40%;
-    padding: 20px;
-    background: white;
-}
-
-#chat-box {
-    height: 300px; /* Feste Höhe */
-    border: 1px solid #ddd;
-    padding: 10px;
-    background: #fafafa;
-    overflow-y: auto; /* Scrollbar aktivieren */
-    display: flex;
-    flex-direction: column;
-}
-
-.message {
-    padding: 10px;
-    margin: 10px;
-    border-radius: 10px;
-    max-width: 75%;
-}
-
-.message.user {
-    background-color: #d1ecf1;
-    align-self: flex-end;
-}
-
-.message.bot {
-    background-color: #f8d7da;
-    align-self: flex-start;
-}
-
-#input-container {
-    display: flex;
-    margin-top: 10px;
-}
-
-#user-input {
-    flex-grow: 1;
+.bubble {
     padding: 15px;
+    border-radius: 10px;
+    margin: 10px;
+    color: white;
+}
+
+.green { background: #28a745; }
+.orange { background: #ff9800; }
+.red { background: #dc3545; }
+
+.custom-file-upload {
+    background-color: #0078ff;
+    color: white;
+    padding: 10px 20px;
+    display: inline-block;
+    cursor: pointer;
     font-size: 18px;
-    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.custom-file-upload input {
+    display: none;
 }
 
 button {
-    background: #0078ff;
+    background: #0056b3;
     color: white;
-    padding: 15px;
+    padding: 12px;
     border: none;
     cursor: pointer;
     font-size: 18px;
-}
-
-#upload-container {
-    margin-top: 30px;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#analysis-container {
-    width: 60%;
-    padding: 20px;
-    background: #f8f8f8;
-}
-
-#analysis-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#analysis-table th, #analysis-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-#analysis-table th {
-    background-color: #0078ff;
-    color: white;
+    margin-left: 10px;
 }
