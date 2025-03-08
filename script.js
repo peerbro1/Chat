@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function addMessage(sender, text) {
         const msg = document.createElement("div");
-        msg.className = `message bubble ${sender}`;
+        msg.className = `message ${sender}`;
         msg.textContent = text;
         chatBox.appendChild(msg);
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen! Die Analyse läuft...";
             setTimeout(() => {
-                updateAnalysisResults(data.output);
+                displayAnalysisResults(data.output);
                 uploadStatus.innerHTML = "✅ Analyse abgeschlossen!";
             }, 2000);
         })
@@ -76,21 +76,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function updateAnalysisResults(data) {
-        analysisResults.innerHTML = "";
+    function displayAnalysisResults(data) {
+        analysisResults.innerHTML = ""; // Vorherige Ergebnisse löschen
+
+        if (!data || Object.keys(data).length === 0) {
+            analysisResults.innerHTML = "<p>❌ Keine Analyse-Ergebnisse gefunden.</p>";
+            return;
+        }
 
         const categories = {
-            "passende_qualifikationen": { label: "Das passt gut 🤗", color: "green" },
-            "zu_klaerende_punkte": { label: "Sollten wir noch mal anschauen 🧐", color: "orange" },
-            "red_flags": { label: "Red Flags? 😧", color: "red" }
+            "passende_qualifikationen": { label: "✅ Das passt gut:", color: "green" },
+            "zu_klaerende_punkte": { label: "🧐 Sollten wir noch mal anschauen:", color: "orange" },
+            "red_flags": { label: "❌ Red Flags:", color: "red" }
         };
 
-        Object.entries(data || {}).forEach(([key, value]) => {
+        Object.entries(data).forEach(([key, value]) => {
             if (!categories[key]) return;
 
             const div = document.createElement("div");
-            div.className = `bubble ${categories[key].color}`;
-            div.innerHTML = `<strong>${categories[key].label}:</strong> ${value.join(", ")}`;
+            div.className = `analysis-box ${categories[key].color}`;
+            div.innerHTML = `<strong>${categories[key].label}</strong> ${value.join(", ")}`;
             analysisResults.appendChild(div);
         });
     }
