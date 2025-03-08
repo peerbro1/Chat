@@ -28,9 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
+            console.log("Chat-Antwort:", data); // Debug-Ausgabe
             addMessage("bot", data.output || "Fehler: Keine Antwort erhalten.");
         })
-        .catch(() => {
+        .catch(error => {
+            console.error("Chat Fehler:", error);
             addMessage("bot", "❌ Fehler bei der Verbindung zum Server.");
         });
 
@@ -65,18 +67,28 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
+            console.log("Upload-Response:", data); // Debugging: API-Antwort anzeigen
+
+            if (!data || !data.output) {
+                uploadStatus.innerHTML = "❌ Fehler: Keine Analyse-Daten erhalten.";
+                return;
+            }
+
             uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen! Die Analyse läuft...";
             setTimeout(() => {
                 displayAnalysisResults(data.output);
                 uploadStatus.innerHTML = "✅ Analyse abgeschlossen!";
             }, 2000);
         })
-        .catch(() => {
+        .catch(error => {
+            console.error("Upload Fehler:", error);
             uploadStatus.innerHTML = "❌ Fehler beim Hochladen.";
         });
     }
 
     function displayAnalysisResults(data) {
+        console.log("Empfangene Analyse-Daten:", data); // Debugging
+
         analysisResults.innerHTML = ""; // Vorherige Ergebnisse löschen
 
         if (!data || Object.keys(data).length === 0) {
@@ -95,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const div = document.createElement("div");
             div.className = `analysis-box ${categories[key].color}`;
-            div.innerHTML = `<strong>${categories[key].label}</strong> ${value.join(", ")}`;
+            div.innerHTML = `<strong>${categories[key].label}</strong> ${Array.isArray(value) ? value.join(", ") : value}`;
             analysisResults.appendChild(div);
         });
     }
