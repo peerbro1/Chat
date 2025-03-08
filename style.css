@@ -10,27 +10,24 @@ body {
     background-color: #f5f5f5;
     text-align: center;
     color: #333;
+    line-height: 1.6;
 }
 
 header {
     background: #0056b3;
     color: white;
-    padding: 40px;
+    padding: 50px;
 }
 
 .header-text ul {
     list-style-type: none;
-    padding: 0;
-}
-
-.header-text li {
-    margin: 10px 0;
+    padding: 20px 0;
 }
 
 #main-container {
     display: flex;
     justify-content: space-between;
-    margin: 20px auto;
+    margin: 30px auto;
     width: 90%;
     max-width: 1200px;
 }
@@ -38,7 +35,7 @@ header {
 .bubble {
     padding: 15px;
     border-radius: 10px;
-    margin: 10px;
+    margin: 15px;
     color: white;
 }
 
@@ -49,7 +46,7 @@ header {
 .custom-file-upload {
     background-color: #0078ff;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     display: inline-block;
     cursor: pointer;
     font-size: 18px;
@@ -63,9 +60,8 @@ header {
 button {
     background: #0056b3;
     color: white;
-    padding: 12px;
+    padding: 14px;
     border: none;
     cursor: pointer;
     font-size: 18px;
-    margin-left: 10px;
 }

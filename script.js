@@ -84,7 +84,9 @@ document.addEventListener("DOMContentLoaded", function () {
             "red_flags": { label: "Red Flags? 😧", color: "red" }
         };
 
-        Object.entries(data).forEach(([key, value]) => {
+        Object.entries(data || {}).forEach(([key, value]) => {
+            if (!categories[key]) return;
+
             const div = document.createElement("div");
             div.className = `bubble ${categories[key].color}`;
             div.innerHTML = `<strong>${categories[key].label}:</strong> ${value.join(", ")}`;

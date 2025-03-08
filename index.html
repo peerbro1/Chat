@@ -21,11 +21,10 @@
         </div>
     </header>
 
-    <div id="main-container">
+    <main id="main-container">
         <div id="chat-container">
             <h2>💬 Chat mit dem Bewerbungsbot</h2>
             <div id="chat-box"></div>
-
             <div id="input-container">
                 <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
                 <button id="send-button">Senden</button>
@@ -36,18 +35,18 @@
             <h2>📊 Abgleich der Stellenausschreibung mit Peers Qualifikationen</h2>
             <div id="analysis-results"></div>
         </div>
-    </div>
+    </main>
 
-    <div id="upload-container">
+    <section id="upload-container">
         <h3>📂 Stellenausschreibung hochladen</h3>
         <p>Lade hier die PDF der Stellenbeschreibung hoch, um den automatischen Abgleich zu starten.</p>
-        
+
         <label class="custom-file-upload">
             <input type="file" id="file-input" accept=".pdf">
-            Datei auswählen
+            📎 Datei auswählen
         </label>
-        <button id="upload-button">Datei hochladen</button>
-    </div>
+        <button id="upload-button">📤 Datei hochladen</button>
+    </section>
 
     <script src="script.js"></script>
 </body>
