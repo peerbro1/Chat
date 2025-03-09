@@ -100,7 +100,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Verarbeitung der Analyse-Daten aus n8n
   function processAnalysisData(data) {
-    let parsedObj = data.output; // Direkt als Objekt verwenden
+    let parsedObj = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
+
 
     if (!parsedObj || typeof parsedObj !== "object") {
       console.error("Fehler: Daten sind kein gültiges JSON-Objekt", parsedObj);
