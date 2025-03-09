@@ -100,27 +100,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Verarbeitung der Analyse-Daten aus n8n
   function processAnalysisData(data) {
-    let parsedObj;
+    let parsedObj = data.output; // Direkt als Objekt verwenden
 
-    // Mehrfaches JSON-Parsing für verschachtelte Strings
-    try {
-      parsedObj = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
-      if (typeof parsedObj === "string") {
-        parsedObj = JSON.parse(parsedObj); // Falls der JSON nochmal verschachtelt ist
-      }
-    } catch (e) {
-      console.error("Fehler beim JSON-Parsing:", e);
+    if (!parsedObj || typeof parsedObj !== "object") {
+      console.error("Fehler: Daten sind kein gültiges JSON-Objekt", parsedObj);
       analysisResults.innerHTML = "<p>⚠️ Fehler beim Verarbeiten der Analyse-Daten</p>";
       return;
     }
 
     // Falls keine Daten enthalten sind
-    if (!parsedObj || Object.keys(parsedObj).length === 0) {
+    if (Object.keys(parsedObj).length === 0) {
       analysisResults.innerHTML = "<p>⚠️ Keine Daten zur Analyse verfügbar.</p>";
       return;
     }
 
-    // Darstellung als Liste (wenn Bubbles nicht funktionieren)
+    // Darstellung als Liste (anstatt von Bubbles)
     let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3>`;
 
     Object.entries(parsedObj).forEach(([category, items]) => {
