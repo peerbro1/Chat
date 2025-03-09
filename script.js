@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let fileName = "";
     let isUploading = false;
   
-    //---------------------------
-    // 1) Chat-FUNKTIONALITÄT
-    //---------------------------
+    //------------------------------------------------
+    // CHAT-FUNKTIONALITÄT
+    //------------------------------------------------
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -55,24 +55,24 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
           removeTypingIndicator();
-          console.log("Chat-Response:", data);
+          console.log("Chat-Response von n8n:", data);
   
-          // Falls n8n ein Array zurückgibt, z. B. [{ "output": "Hallo ..." }]
+          // Falls n8n ein Array zurückgibt
           if (Array.isArray(data) && data.length > 0 && data[0].output) {
             addMessage("bot", data[0].output);
           }
-          // Falls n8n ein Objekt zurückgibt { "output": "..." }
+          // Falls n8n ein Objekt { "output": "..." }
           else if (data.output) {
             addMessage("bot", data.output);
           }
           else {
-            addMessage("bot", "Ich konnte keine Antwort generieren. Bitte versuche es nochmal.");
+            addMessage("bot", "Ich konnte keine Antwort generieren. Bitte versuche es erneut.");
           }
         })
         .catch(error => {
           console.error("Fehler:", error);
           removeTypingIndicator();
-          addMessage("bot", "Fehler aufgetreten. Bitte versuche es später noch einmal.");
+          addMessage("bot", "Es ist ein Fehler aufgetreten. Bitte versuche es später noch einmal.");
         })
         .finally(() => {
           userInput.disabled = false;
@@ -104,9 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (typingIndicator) typingIndicator.remove();
     }
   
-    //---------------------------
-    // 2) DATEI-UPLOAD (Stellenabgleich)
-    //---------------------------
+    //------------------------------------------------
+    // DATEI-UPLOAD: STELLENABGLEICH
+    //------------------------------------------------
     fileInput.addEventListener("change", function() {
       const file = fileInput.files[0];
       if (file) {
@@ -155,9 +155,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
-          console.log("Upload-Response:", data);
+          console.log("Upload-Response von n8n:", data);
   
-          // data ist ein Array mit 1 Item, z. B.:
+          // data ist ein Array, z. B.:
           // [
           //   {
           //     "output": "{\n  \"passende_qualifikationen\": [...],\n  \"zu_klaerende_punkte\": [...],\n  \"red_flags\": [...]\n}"
@@ -165,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
           // ]
           if (Array.isArray(data) && data.length > 0 && data[0].output) {
             try {
-              // parse das JSON
               const parsedObj = JSON.parse(data[0].output);
               displayAnalysisResults(parsedObj);
             } catch (err) {
@@ -191,23 +190,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     /**
-     * Baut eine 3-Spalten-Tabelle für:
-     *  - passende_qualifikationen
-     *  - zu_klaerende_punkte
-     *  - red_flags
+     * Baut eine 3-Spalten-Tabelle:
+     *   passende_qualifikationen
+     *   zu_klaerende_punkte
+     *   red_flags
      */
     function displayAnalysisResults(parsedObj) {
       const arrPassend = parsedObj.passende_qualifikationen || [];
       const arrKlaeren = parsedObj.zu_klaerende_punkte || [];
       const arrFlags = parsedObj.red_flags || [];
   
-      // Prüfen, ob alle Arrays leer sind
       if (arrPassend.length === 0 && arrKlaeren.length === 0 && arrFlags.length === 0) {
         analysisResults.innerHTML = '<p>Keine detaillierten Analyseergebnisse verfügbar.</p>';
         return;
       }
   
-      // Tabelle aufbauen
       let tableHTML = `
         <h3>Ergebnisse des Profilabgleichs</h3>
         <table class="analysis-table">
@@ -221,7 +218,6 @@ document.addEventListener("DOMContentLoaded", function () {
           <tbody>
       `;
   
-      // Maximale Zeilenanzahl
       const maxRows = Math.max(arrPassend.length, arrKlaeren.length, arrFlags.length);
       for (let i = 0; i < maxRows; i++) {
         const col1 = arrPassend[i] || "";
@@ -235,11 +231,15 @@ document.addEventListener("DOMContentLoaded", function () {
           </tr>
         `;
       }
-      tableHTML += `</tbody></table>`;
+  
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
   
       analysisResults.innerHTML = tableHTML;
   
-      // Styles für die Tabelle nur einmal anhängen
+      // Styles für Tabelle nur einmal anhängen
       if (!document.getElementById('analysis-styles')) {
         const styleElement = document.createElement('style');
         styleElement.id = 'analysis-styles';
@@ -264,7 +264,9 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   
-    // MODAL-FUNKTIONALITÄT
+    //------------------------------------------------
+    // MODAL-FUNKTION
+    //------------------------------------------------
     function showNotification(message) {
       modalMessage.textContent = message;
       modal.style.display = "block";
@@ -280,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   
-    // Willkommensnachricht beim Laden
+    // Erste Bot-Nachricht
     addMessage("bot", "Hallo! Ich bin der Bewerbungsbot und kann dir Fragen zu meinem Profil beantworten. Was möchtest du wissen?");
   });
   
