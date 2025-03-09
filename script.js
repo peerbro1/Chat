@@ -117,18 +117,50 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Darstellung als Liste
-    let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3>`;
+    // 🎨 FARBCODES FÜR DIE KATEGORIEN
+    const categoryColors = {
+      "passende_qualifikationen": "#28a745",
+      "zu_klaerende_punkte": "#ffc107",
+      "red_flags": "#dc3545"
+    };
+
+    // 🎨 STYLE FÜR DIE BUBBLES
+    const bubbleStyle = `
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 15px;
+      margin: 3px;
+      color: white;
+      font-weight: bold;
+    `;
+
+    let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3><table style="width: 100%; border-collapse: collapse;">`;
+
     Object.entries(parsedObj).forEach(([category, items]) => {
       if (Array.isArray(items) && items.length > 0) {
-        outputHTML += `<h4>🔹 ${category.replace(/_/g, " ").toUpperCase()}</h4><ul>`;
+        outputHTML += `
+          <tr>
+            <th colspan="2" style="background-color: ${categoryColors[category] || "#007bff"}; color: white; padding: 10px;">
+              ${category.replace(/_/g, " ").toUpperCase()}
+            </th>
+          </tr>
+        `;
+
         items.forEach(item => {
-          outputHTML += `<li>${item}</li>`;
+          outputHTML += `
+            <tr>
+              <td style="padding: 10px; border: 1px solid #ddd;">
+                <span style="${bubbleStyle} background-color: ${categoryColors[category] || "#007bff"}">
+                  ${item}
+                </span>
+              </td>
+            </tr>
+          `;
         });
-        outputHTML += `</ul>`;
       }
     });
 
+    outputHTML += `</table>`;
     analysisResults.innerHTML = outputHTML;
   }
 });
