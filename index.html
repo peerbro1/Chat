@@ -5,32 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bewerbungs-Chatbot von Peer Meyer-Puttlitz</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
+    <!-- HEADER / BEGRÜSSUNG -->
     <header>
         <div class="header-content">
             <h1>Deine Stellenanzeige trifft auf mich</h1>
             <p class="welcome-text">
                 Willkommen! Ich habe diesen Chatbot selbst entwickelt, um dir zu zeigen, wie gut ich zu euch passe:
             </p>
+            <ul class="welcome-list">
+                <li>✅ <b>Lade deine Stellenausschreibung als PDF hoch</b></li>
+                <li>✅ <b>Mein System gleicht sie mit meinem Profil ab</b></li>
+                <li>✅ <b>Der Chatbot beantwortet, was ihr noch wissen wollt</b></li>
+            </ul>
             <p class="welcome-text">
-                ✅ <b>Lade deine Stellenausschreibung als PDF hoch</b><br>
-                ✅ <b>Mein System gleicht sie mit meinem Profil ab</b><br>
-                ✅ <b>Der Chatbot beantwortet, was ihr noch wissen wollt</b><br>
-            </p>
-            <p class="welcome-text">
-                So siehst du sofort, ob ich der richtige Kandidat für euch bin.<br>
+                So siehst du sofort, ob ich der richtige Kandidat für euch bin. <br>
                 Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!
             </p>
             <p class="beta-hinweis">⚠ Hinweis: Der Chatbot befindet sich in der <b>Beta-Phase</b>, es können noch Fehler auftreten.</p>
         </div>
     </header>
 
-    <main id="main-container">
+    <!-- MITTELTEIL: CHAT & ANALYSE -->
+    <main>
         <div id="chat-analysis-container">
+            <!-- Chat-Fenster -->
             <div id="chat-container">
-                <div class="panel-header chat-header">
+                <div class="panel-header">
                     <i class="fas fa-comments"></i>
                     <h2>Chat mit dem Bewerbungsbot</h2>
                 </div>
@@ -41,6 +45,7 @@
                 </div>
             </div>
 
+            <!-- Analyse-Ergebnis -->
             <div id="analysis-container">
                 <div class="panel-header">
                     <i class="fas fa-file-alt"></i>
@@ -62,6 +67,7 @@
         </div>
     </main>
 
+    <!-- UPLOAD-BEREICH -->
     <section id="upload-container">
         <h3>📂 Stellenausschreibung hochladen</h3>
         <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>
@@ -74,7 +80,5 @@
         </div>
         <div id="status-container"></div>
     </section>
-
-    <script src="script.js"></script>
 </body>
 </html>

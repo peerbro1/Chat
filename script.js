@@ -5,9 +5,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const fileInput = document.getElementById("file-input");
     const uploadButton = document.getElementById("upload-button");
     const statusContainer = document.getElementById("status-container");
-    const matchList = document.getElementById("match-list");
-    const openList = document.getElementById("open-list");
-    const redflagsList = document.getElementById("redflags-list");
 
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
@@ -33,7 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             statusContainer.innerHTML = "📊 Die Analyse beginnt...";
             setTimeout(() => {
-                displayAnalysisResults(data);
                 statusContainer.innerHTML = "✅ Analyse abgeschlossen!";
             }, 2000);
         })
