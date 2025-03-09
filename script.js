@@ -53,10 +53,22 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
           removeTypingIndicator();
-          const reply = data.output || data.message;
-          if (reply) {
+  
+          // Wir gehen davon aus, dass data ein Array ist (z. B. [{ "output": "Hallo ..." }]).
+          // Falls das so ist, holen wir uns data[0].output:
+          if (Array.isArray(data) && data.length > 0 && data[0].output) {
+            // output könnte direkt ein Text sein
+            const reply = data[0].output;
+            // Falls du hier nochmal JSON parse willst, kannst du das anpassen. 
+            // Wir nehmen an, es ist normaler Text:
             addMessage("bot", reply);
+  
+          } else if (data.output) {
+            // Falls data KEIN Array, aber ein Objekt mit data.output
+            addMessage("bot", data.output);
+  
           } else {
+            // Fallback
             addMessage("bot", "Es tut mir leid, ich konnte keine Antwort generieren. Bitte versuche es noch einmal.");
           }
         })
@@ -145,13 +157,19 @@ document.addEventListener("DOMContentLoaded", function () {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
           
-          // Erwartet: data.analysis mit den drei Arrays
-          if (data && data.output) {
-            displayAnalysisResults(data.output);
+          // Hier ist das entscheidende: data ist ein Array, also data[0].output ist ein String,
+          // das wir erst mit JSON.parse in ein Objekt umwandeln müssen.
+          if (Array.isArray(data) && data.length > 0 && data[0].output) {
+            try {
+              const parsedObj = JSON.parse(data[0].output); // -> { passende_qualifikationen: [...], zu_klaerende_punkte: [...], red_flags: [...] }
+              displayAnalysisResults(parsedObj);
+            } catch (err) {
+              console.error("Fehler beim JSON-Parse:", err);
+              analysisResults.innerHTML = '<p>⚠️ Konnte die Analyse-Daten nicht verarbeiten.</p>';
+            }
           } else {
             analysisResults.innerHTML = '<p>⚠️ Keine detaillierten Analyseergebnisse verfügbar.</p>';
           }
-          
           
           // Zurücksetzen
           fileInput.value = "";
@@ -178,17 +196,14 @@ document.addEventListener("DOMContentLoaded", function () {
      *
      * Jede Zeile enthält ein Element pro Spalte (sofern vorhanden).
      */
-    function displayAnalysisResults(analysis) {
-      const arrPassend = analysis.passende_qualifikationen || [];
-      const arrKlaeren = analysis.zu_klaerende_punkte || [];
-      const arrFlags = analysis.red_flags || [];
+    function displayAnalysisResults(parsedObj) {
+      // Arrays holen
+      const arrPassend = parsedObj.passende_qualifikationen || [];
+      const arrKlaeren = parsedObj.zu_klaerende_punkte || [];
+      const arrFlags = parsedObj.red_flags || [];
   
       // Prüfen, ob alle Arrays leer sind
-      if (
-        arrPassend.length === 0 &&
-        arrKlaeren.length === 0 &&
-        arrFlags.length === 0
-      ) {
+      if (arrPassend.length === 0 && arrKlaeren.length === 0 && arrFlags.length === 0) {
         analysisResults.innerHTML = `<p>Keine detaillierten Analyseergebnisse verfügbar.</p>`;
         return;
       }
