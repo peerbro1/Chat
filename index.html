@@ -6,49 +6,49 @@
     <title>Bewerbungs-Chatbot</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <!-- Begrüßung -->
+    <!-- Begrüßungsbereich -->
     <header>
         <h1>Deine Stellenanzeige trifft auf mich</h1>
-        <p>Willkommen! Ich habe diesen Chatbot entwickelt, um dir zu zeigen, wie gut ich zu euch passe.</p>
-        <ul>
-            <li>✅ <strong>Lade deine Stellenanzeige als PDF hoch</strong></li>
-            <li>✅ <strong>Mein System gleicht sie mit meinem Profil ab</strong></li>
-            <li>✅ <strong>Der Chatbot beantwortet deine Fragen</strong></li>
-        </ul>
-        <p>So siehst du sofort, ob ich der richtige Kandidat für euch bin.<br>Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!</p>
-        <p>⚠️ <strong>Hinweis:</strong> Der Chatbot befindet sich in der <strong>Beta-Phase</strong>, es können noch Fehler auftreten.</p>
+        <p>
+            Willkommen! Ich habe diesen Chatbot entwickelt, um zu zeigen, wie gut ich zu euch passe.<br>
+            ✅ <b>Lade deine Stellenanzeige als PDF hoch</b><br>
+            ✅ <b>Mein System gleicht sie mit meinem Profil ab</b><br>
+            ✅ <b>Der Chatbot beantwortet deine Fragen</b><br><br>
+            So siehst du sofort, ob ich der richtige Kandidat für euch bin.<br>
+            Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!<br>
+            ⚠️ <b>Hinweis:</b> Der Chatbot befindet sich in der <b>Beta-Phase</b>, es können noch Fehler auftreten.
+        </p>
     </header>
 
-    <!-- Mittelteil mit Chat und Analyse -->
+    <!-- Hauptbereich mit Chat & Analyse -->
     <main>
         <section class="chat-container">
             <h2>💬 Chat mit dem Bewerbungsbot</h2>
             <div id="chat-box"></div>
             <div class="chat-input">
                 <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
-                <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+                <button id="send-button">📨</button>
             </div>
         </section>
 
         <section class="analysis-container">
             <h2>📄 Stellenabgleich</h2>
-            <div id="analysis-results">
-                <p>⚠️ Keine Analyse-Ergebnisse gefunden.</p>
-            </div>
+            <div id="analysis-results">⚠️ Keine Analyse-Ergebnisse gefunden.</div>
         </section>
     </main>
 
-    <!-- Datei-Upload-Bereich -->
-    <section class="upload-container">
+    <!-- Datei-Upload Bereich -->
+    <footer>
         <h2>📂 Stellenanzeige hochladen</h2>
         <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>
-        <input type="file" id="file-input">
-        <button id="upload-button">📤 Hochladen</button>
-    </section>
+        <div class="upload-container">
+            <input type="file" id="file-input" accept=".pdf">
+            <button id="upload-button">📤 Hochladen</button>
+        </div>
+    </footer>
 
 </body>
 </html>

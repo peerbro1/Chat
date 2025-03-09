@@ -6,9 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadButton = document.getElementById("upload-button");
     const analysisResults = document.getElementById("analysis-results");
 
-    const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/DEIN_CHAT_WEBHOOK";
-    const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/DEIN_FILE_WEBHOOK";
+    const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+    const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/file-upload";
 
+    // Chat senden
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") sendMessage();
@@ -17,56 +18,65 @@ document.addEventListener("DOMContentLoaded", function () {
     function sendMessage() {
         const message = userInput.value.trim();
         if (message === "") return;
+
         addMessage("user", message);
+        showTypingIndicator();
 
         fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
+            body: JSON.stringify({ text: message })
         })
-            .then(response => response.json())
-            .then(data => addMessage("bot", data.output))
-            .catch(() => addMessage("bot", "⚠️ Fehler bei der Verbindung zum Server."));
+        .then(response => response.json())
+        .then(data => {
+            removeTypingIndicator();
+            addMessage("bot", data.output || "⚠️ Keine Antwort erhalten.");
+        })
+        .catch(() => {
+            removeTypingIndicator();
+            addMessage("bot", "⚠️ Fehler bei der Verbindung zum Server.");
+        });
 
         userInput.value = "";
     }
 
     function addMessage(sender, text) {
-        const msg = document.createElement("div");
-        msg.className = `message ${sender}`;
-        msg.textContent = text;
-        chatBox.appendChild(msg);
+        const msgElement = document.createElement("div");
+        msgElement.className = `message ${sender}`;
+        msgElement.textContent = text;
+        chatBox.appendChild(msgElement);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    uploadButton.addEventListener("click", () => {
-        if (!fileInput.files.length) return alert("Bitte Datei auswählen!");
+    function showTypingIndicator() {
+        removeTypingIndicator();
+        const typingIndicator = document.createElement("div");
+        typingIndicator.id = "typing-indicator";
+        typingIndicator.className = "message bot";
+        typingIndicator.textContent = "Der Chatbot schreibt...";
+        chatBox.appendChild(typingIndicator);
+    }
+
+    function removeTypingIndicator() {
+        const typingIndicator = document.getElementById("typing-indicator");
+        if (typingIndicator) typingIndicator.remove();
+    }
+
+    // Datei-Upload
+    uploadButton.addEventListener("click", function () {
+        const file = fileInput.files[0];
+        if (!file) return alert("Bitte eine Datei auswählen!");
 
         const formData = new FormData();
-        formData.append("file", fileInput.files[0]);
+        formData.append("file", file);
 
-        addMessage("bot", "📤 Datei wird hochgeladen...");
-
-        fetch(FILE_WEBHOOK_URL, {
-            method: "POST",
-            body: formData
+        fetch(FILE_WEBHOOK_URL, { method: "POST", body: formData })
+        .then(response => response.json())
+        .then(data => {
+            analysisResults.innerHTML = "✅ Analyse abgeschlossen!";
         })
-            .then(response => response.json())
-            .then(data => {
-                addMessage("bot", "📊 Die Analyse beginnt...");
-                setTimeout(() => {
-                    analysisResults.innerHTML = formatAnalysisResults(data);
-                    addMessage("bot", "✅ Die Analyse ist abgeschlossen!");
-                }, 2000);
-            })
-            .catch(() => addMessage("bot", "❌ Fehler beim Hochladen."));
+        .catch(() => {
+            analysisResults.innerHTML = "❌ Fehler beim Hochladen.";
+        });
     });
-
-    function formatAnalysisResults(data) {
-        return `
-            <p>✅ <strong>Passende Qualifikationen</strong>: ${data.passende_qualifikationen || "Keine Daten."}</p>
-            <p>🧐 <strong>Zu klärende Punkte</strong>: ${data.zu_klaerende_punkte || "Keine Daten."}</p>
-            <p>⚠️ <strong>Red Flags</strong>: ${data.red_flags || "Keine Daten."}</p>
-        `;
-    }
 });
