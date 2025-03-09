@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
           
-          // Erwartet: data.analysis mit den drei Kategorien
+          // Erwartet: data.analysis mit den drei Arrays
           if (data && data.analysis) {
             displayAnalysisResults(data.analysis);
           } else {
@@ -170,90 +170,84 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     /**
-     * Stellt die Analyse-Ergebnisse in drei Kategorien dar:
-     *   - passende_qualifikationen
-     *   - zu_klaerende_punkte
-     *   - red_flags
-     * Jede Kategorie wird in "Bubbles" angezeigt.
+     * Zeigt eine Tabelle mit 3 Spalten an:
+     *  - Passende Qualifikationen
+     *  - Zu klärende Punkte
+     *  - Red Flags
+     *
+     * Jede Zeile enthält ein Element pro Spalte (sofern vorhanden).
      */
     function displayAnalysisResults(analysis) {
-      let resultsHTML = '<h3>Ergebnisse des Profilabgleichs</h3>';
+      const arrPassend = analysis.passende_qualifikationen || [];
+      const arrKlaeren = analysis.zu_klaerende_punkte || [];
+      const arrFlags = analysis.red_flags || [];
   
-      // Passende Qualifikationen
-      if (analysis.passende_qualifikationen && analysis.passende_qualifikationen.length > 0) {
-        resultsHTML += `
-          <div class="category">
-            <h4>Passende Qualifikationen</h4>
-            <div class="bubbles">
-        `;
-        analysis.passende_qualifikationen.forEach(item => {
-          resultsHTML += `<span class="bubble">${item}</span>`;
-        });
-        resultsHTML += `</div></div>`;
-      }
-  
-      // Zu klärende Punkte
-      if (analysis.zu_klaerende_punkte && analysis.zu_klaerende_punkte.length > 0) {
-        resultsHTML += `
-          <div class="category">
-            <h4>Zu klärende Punkte</h4>
-            <div class="bubbles">
-        `;
-        analysis.zu_klaerende_punkte.forEach(item => {
-          resultsHTML += `<span class="bubble">${item}</span>`;
-        });
-        resultsHTML += `</div></div>`;
-      }
-  
-      // Red Flags
-      if (analysis.red_flags && analysis.red_flags.length > 0) {
-        resultsHTML += `
-          <div class="category">
-            <h4>Red Flags</h4>
-            <div class="bubbles">
-        `;
-        analysis.red_flags.forEach(item => {
-          resultsHTML += `<span class="bubble">${item}</span>`;
-        });
-        resultsHTML += `</div></div>`;
-      }
-  
-      // Falls gar keine Kategorien gefüllt sind
+      // Prüfen, ob alle Arrays leer sind
       if (
-        (!analysis.passende_qualifikationen || analysis.passende_qualifikationen.length === 0) &&
-        (!analysis.zu_klaerende_punkte || analysis.zu_klaerende_punkte.length === 0) &&
-        (!analysis.red_flags || analysis.red_flags.length === 0)
+        arrPassend.length === 0 &&
+        arrKlaeren.length === 0 &&
+        arrFlags.length === 0
       ) {
-        resultsHTML += `<p>Keine detaillierten Analyseergebnisse verfügbar.</p>`;
+        analysisResults.innerHTML = `<p>Keine detaillierten Analyseergebnisse verfügbar.</p>`;
+        return;
       }
   
-      analysisResults.innerHTML = resultsHTML;
+      // Tabelle aufbauen
+      let tableHTML = `
+        <h3>Ergebnisse des Profilabgleichs</h3>
+        <table class="analysis-table">
+          <thead>
+            <tr>
+              <th>Passende Qualifikationen</th>
+              <th>Zu klärende Punkte</th>
+              <th>Red Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
   
-      // Zusätzliche Styles für die Bubbles nur einmal anhängen
+      // Maximale Zeilenanzahl (längstes Array)
+      const maxRows = Math.max(arrPassend.length, arrKlaeren.length, arrFlags.length);
+  
+      for (let i = 0; i < maxRows; i++) {
+        const col1 = arrPassend[i] || "";
+        const col2 = arrKlaeren[i] || "";
+        const col3 = arrFlags[i] || "";
+        tableHTML += `
+          <tr>
+            <td>${col1}</td>
+            <td>${col2}</td>
+            <td>${col3}</td>
+          </tr>
+        `;
+      }
+  
+      tableHTML += `
+          </tbody>
+        </table>
+      `;
+  
+      analysisResults.innerHTML = tableHTML;
+  
+      // Styles für die Tabelle nur einmal anhängen
       if (!document.getElementById('analysis-styles')) {
         const styleElement = document.createElement('style');
         styleElement.id = 'analysis-styles';
         styleElement.textContent = `
-          .category {
-            margin-bottom: 20px;
-            text-align: left;
+          .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
           }
-          .category h4 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
+          .analysis-table th,
+          .analysis-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            vertical-align: top;
           }
-          .bubbles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-          }
-          .bubble {
-            display: inline-block;
-            background-color: #e9ecef;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: var(--dark-text);
+          .analysis-table th {
+            background-color: var(--primary-color);
+            color: #fff;
           }
         `;
         document.head.appendChild(styleElement);
