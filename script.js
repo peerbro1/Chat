@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalMessage = document.getElementById("notification-message");
     const closeButton = document.querySelector(".close-button");
   
-    // n8n Webhook URLs (hier anpassen, falls du andere URLs hast)
+    // n8n Webhook URLs (ggf. anpassen)
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
   
@@ -53,8 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
           removeTypingIndicator();
-          // Wir erwarten vom n8n-Workflow ein JSON-Feld "output"
-          // oder ersatzweise "message"
           const reply = data.output || data.message;
           if (reply) {
             addMessage("bot", reply);
@@ -131,8 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
   
       const formData = new FormData();
       formData.append("file", file);
-      // Falls du zusätzliche Felder senden möchtest:
-      // formData.append("dateiName", fileName);
   
       fetch(FILE_WEBHOOK_URL, {
         method: "POST",
@@ -149,15 +145,13 @@ document.addEventListener("DOMContentLoaded", function () {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
           
-          // Wir erwarten, dass n8n ein JSON-Feld "analysis" zurückgibt
-          // z. B. { "analysis": { ... } }
           if (data && data.analysis) {
             displayAnalysisResults(data.analysis);
           } else {
             analysisResults.innerHTML = '<p>⚠️ Keine detaillierten Analyseergebnisse verfügbar.</p>';
           }
           
-          // Zurücksetzen des Dateiauswahl-Feldes
+          // Zurücksetzen
           fileInput.value = "";
           fileLabel.textContent = "Datei auswählen";
           uploadButton.disabled = true;
