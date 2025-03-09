@@ -12,15 +12,17 @@
         <div class="header-content">
             <h1>Bewerbungs-Chatbot</h1>
             
-            <p>Willkommen! Hier kannst du schnell und direkt mehr über mich erfahren.</p>
-            
-            <p>
+            <p class="welcome-text">
+                Willkommen! Hier kannst du schnell und direkt mehr über mich erfahren.
+            </p>
+
+            <p class="welcome-text">
                 🔹 Stelle deine Fragen im Chat – Erfahre mehr über meine Qualifikationen, Erfahrung und Stärken.  
                 🔹 Lade eine Stellenausschreibung als PDF hoch – Der Abgleich zeigt, wie gut mein Profil passt.  
                 🔹 Klare Einschätzung – Welche Anforderungen erfülle ich, wo gibt es Entwicklungspotenzial?  
             </p>
 
-            <p>
+            <p class="welcome-text">
                 Nutze diese Möglichkeit, um unkompliziert und effizient herauszufinden, ob ich zu deiner offenen Position passe.  
                 Ich freue mich darauf, mich in einem persönlichen Gespräch näher vorzustellen!
             </p>
@@ -29,35 +31,37 @@
 
     <main id="main-container">
         <!-- Chat-Bereich -->
-        <div id="chat-container">
-            <div class="panel-header chat-header">
-                <i class="fas fa-comments"></i>
-                <h2>Chat mit dem Bewerbungsbot</h2>
+        <div id="chat-analysis-container">
+            <div id="chat-container">
+                <div class="panel-header chat-header">
+                    <i class="fas fa-comments"></i>
+                    <h2>Chat mit dem Bewerbungsbot</h2>
+                </div>
+                <div id="chat-box"></div>
+                <div id="input-container">
+                    <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
+                    <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+                </div>
             </div>
-            <div id="chat-box"></div>
-            <div id="input-container">
-                <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
-                <button id="send-button"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
 
-        <!-- Analyse-Bereich -->
-        <div id="analysis-container">
-            <div class="panel-header">
-                <i class="fas fa-file-alt"></i>
-                <h2>Stellenabgleich</h2>
-            </div>
-            <div id="match-container">
-                <h3>✅ Passende Qualifikationen</h3>
-                <ul id="match-list"></ul>
-            </div>
-            <div id="open-container">
-                <h3>🧐 Zu klärende Punkte</h3>
-                <ul id="open-list"></ul>
-            </div>
-            <div id="redflags-container">
-                <h3>⚠ Red Flags</h3>
-                <ul id="redflags-list"></ul>
+            <!-- Analyse-Bereich -->
+            <div id="analysis-container">
+                <div class="panel-header">
+                    <i class="fas fa-file-alt"></i>
+                    <h2>Stellenabgleich</h2>
+                </div>
+                <div id="match-container">
+                    <h3>✅ Passende Qualifikationen</h3>
+                    <ul id="match-list"></ul>
+                </div>
+                <div id="open-container">
+                    <h3>🧐 Zu klärende Punkte</h3>
+                    <ul id="open-list"></ul>
+                </div>
+                <div id="redflags-container">
+                    <h3>⚠ Red Flags</h3>
+                    <ul id="redflags-list"></ul>
+                </div>
             </div>
         </div>
     </main>

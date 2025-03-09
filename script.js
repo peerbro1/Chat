@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             addMessage("bot", "📊 Die Analyse beginnt...");
             setTimeout(() => {
-                displayAnalysisResults(data);
+                displayAnalysisResults(data.output);
                 addMessage("bot", "✅ Die Analyse ist abgeschlossen! Hier sind die Ergebnisse:");
             }, 2000);
         })
