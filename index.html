@@ -1,73 +1,20 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bewerbungs-Chatbot</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Begrüßungsbereich -->
-  <header>
-    <h1>Deine Stellenanzeige trifft auf mich</h1>
-    <p>
-      Willkommen! Ich habe diesen Chatbot entwickelt, um zu zeigen, wie gut ich zu euch passe.<br>
-      ✅ <b>Lade deine Stellenanzeige als PDF hoch</b><br>
-      ✅ <b>Mein System gleicht sie mit meinem Profil ab</b><br>
-      ✅ <b>Der Chatbot beantwortet deine Fragen</b><br><br>
-      So siehst du sofort, ob ich der richtige Kandidat für euch bin.<br>
-      Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!<br>
-      ⚠️ <b>Hinweis:</b> Der Chatbot befindet sich in der <b>Beta-Phase</b>, es können noch Fehler auftreten.
-    </p>
-  </header>
-
-  <!-- Hauptbereich mit Chat & Analyse -->
-  <main>
-    <!-- Chat-Bereich -->
-    <section class="chat-container">
-      <h2>💬 Chat mit dem Bewerbungsbot</h2>
-      <div id="chat-box">
-        <div class="message bot">
-          Hallo! Ich bin der Bewerbungsbot und kann dir Fragen zu meinem Profil beantworten. Was möchtest du wissen?
+    <div id="chat-container">
+        <div id="chat-header">Peer Meyer-Puttlitz Chatbot</div>
+        <div id="chat-box"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
+            <button id="send-button">Senden</button>
         </div>
-      </div>
-      <div class="chat-input">
-        <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
-        <button id="send-button">📨</button>
-      </div>
-    </section>
-
-    <!-- Analyse-Bereich -->
-    <section class="analysis-container">
-      <h2>📄 Stellenabgleich</h2>
-      <div id="analysis-results"></div>
-    </section>
-  </main>
-
-  <!-- Datei-Upload Bereich -->
-  <footer>
-    <h2>📂 Stellenanzeige hochladen</h2>
-    <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>
-    <div class="upload-container">
-      <div class="file-input-wrapper">
-        <input type="file" id="file-input" accept=".pdf">
-        <label for="file-input" id="file-label">Datei auswählen</label>
-      </div>
-      <button id="upload-button" disabled>📤 Hochladen</button>
     </div>
-    <div id="upload-status"></div>
-  </footer>
-
-  <!-- Modal für Benachrichtigungen -->
-  <div id="notification-modal" class="modal">
-    <div class="modal-content">
-      <span class="close-button">&times;</span>
-      <p id="notification-message"></p>
-    </div>
-  </div>
-
-  <!-- Version-Info unten rechts -->
-  <div class="version-info">Version 1.14</div>
+    <script src="script.js"></script>
 </body>
 </html>
