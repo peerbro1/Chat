@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let fileName = "";
     let isUploading = false;
   
-    // Chat-Funktionalität
+    //---------------------------
+    // 1) Chat-FUNKTIONALITÄT
+    //---------------------------
     sendButton.addEventListener("click", sendMessage);
     userInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -53,29 +55,24 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
           removeTypingIndicator();
+          console.log("Chat-Response:", data);
   
-          // Wir gehen davon aus, dass data ein Array ist (z. B. [{ "output": "Hallo ..." }]).
-          // Falls das so ist, holen wir uns data[0].output:
+          // Falls n8n ein Array zurückgibt, z. B. [{ "output": "Hallo ..." }]
           if (Array.isArray(data) && data.length > 0 && data[0].output) {
-            // output könnte direkt ein Text sein
-            const reply = data[0].output;
-            // Falls du hier nochmal JSON parse willst, kannst du das anpassen. 
-            // Wir nehmen an, es ist normaler Text:
-            addMessage("bot", reply);
-  
-          } else if (data.output) {
-            // Falls data KEIN Array, aber ein Objekt mit data.output
+            addMessage("bot", data[0].output);
+          }
+          // Falls n8n ein Objekt zurückgibt { "output": "..." }
+          else if (data.output) {
             addMessage("bot", data.output);
-  
-          } else {
-            // Fallback
-            addMessage("bot", "Es tut mir leid, ich konnte keine Antwort generieren. Bitte versuche es noch einmal.");
+          }
+          else {
+            addMessage("bot", "Ich konnte keine Antwort generieren. Bitte versuche es nochmal.");
           }
         })
         .catch(error => {
           console.error("Fehler:", error);
           removeTypingIndicator();
-          addMessage("bot", "Es ist ein Fehler aufgetreten. Bitte versuche es später noch einmal.");
+          addMessage("bot", "Fehler aufgetreten. Bitte versuche es später noch einmal.");
         })
         .finally(() => {
           userInput.disabled = false;
@@ -107,7 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (typingIndicator) typingIndicator.remove();
     }
   
-    // Datei-Upload-Funktionalität
+    //---------------------------
+    // 2) DATEI-UPLOAD (Stellenabgleich)
+    //---------------------------
     fileInput.addEventListener("change", function() {
       const file = fileInput.files[0];
       if (file) {
@@ -156,28 +155,31 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
-          
-          // Hier ist das entscheidende: data ist ein Array, also data[0].output ist ein String,
-          // das wir erst mit JSON.parse in ein Objekt umwandeln müssen.
+          console.log("Upload-Response:", data);
+  
+          // data ist ein Array mit 1 Item, z. B.:
+          // [
+          //   {
+          //     "output": "{\n  \"passende_qualifikationen\": [...],\n  \"zu_klaerende_punkte\": [...],\n  \"red_flags\": [...]\n}"
+          //   }
+          // ]
           if (Array.isArray(data) && data.length > 0 && data[0].output) {
             try {
-              const parsedObj = JSON.parse(data[0].output); // -> { passende_qualifikationen: [...], zu_klaerende_punkte: [...], red_flags: [...] }
+              // parse das JSON
+              const parsedObj = JSON.parse(data[0].output);
               displayAnalysisResults(parsedObj);
             } catch (err) {
               console.error("Fehler beim JSON-Parse:", err);
-              analysisResults.innerHTML = '<p>⚠️ Konnte die Analyse-Daten nicht verarbeiten.</p>';
+              analysisResults.innerHTML = '<p>⚠️ Konnte die Analyse-Daten nicht verarbeiten (Parse-Fehler).</p>';
             }
           } else {
             analysisResults.innerHTML = '<p>⚠️ Keine detaillierten Analyseergebnisse verfügbar.</p>';
           }
-          
+  
           // Zurücksetzen
           fileInput.value = "";
           fileLabel.textContent = "Datei auswählen";
           uploadButton.disabled = true;
-          
-          // Chatbot-Nachricht über den erfolgreichen Upload
-          addMessage("bot", `Ich habe die Stellenanzeige "${fileName}" analysiert! Du kannst mir jetzt Fragen dazu stellen.`);
         })
         .catch(error => {
           console.error("Upload-Fehler:", error);
@@ -189,22 +191,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     /**
-     * Zeigt eine Tabelle mit 3 Spalten an:
-     *  - Passende Qualifikationen
-     *  - Zu klärende Punkte
-     *  - Red Flags
-     *
-     * Jede Zeile enthält ein Element pro Spalte (sofern vorhanden).
+     * Baut eine 3-Spalten-Tabelle für:
+     *  - passende_qualifikationen
+     *  - zu_klaerende_punkte
+     *  - red_flags
      */
     function displayAnalysisResults(parsedObj) {
-      // Arrays holen
       const arrPassend = parsedObj.passende_qualifikationen || [];
       const arrKlaeren = parsedObj.zu_klaerende_punkte || [];
       const arrFlags = parsedObj.red_flags || [];
   
       // Prüfen, ob alle Arrays leer sind
       if (arrPassend.length === 0 && arrKlaeren.length === 0 && arrFlags.length === 0) {
-        analysisResults.innerHTML = `<p>Keine detaillierten Analyseergebnisse verfügbar.</p>`;
+        analysisResults.innerHTML = '<p>Keine detaillierten Analyseergebnisse verfügbar.</p>';
         return;
       }
   
@@ -222,9 +221,8 @@ document.addEventListener("DOMContentLoaded", function () {
           <tbody>
       `;
   
-      // Maximale Zeilenanzahl (längstes Array)
+      // Maximale Zeilenanzahl
       const maxRows = Math.max(arrPassend.length, arrKlaeren.length, arrFlags.length);
-  
       for (let i = 0; i < maxRows; i++) {
         const col1 = arrPassend[i] || "";
         const col2 = arrKlaeren[i] || "";
@@ -237,11 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
           </tr>
         `;
       }
-  
-      tableHTML += `
-          </tbody>
-        </table>
-      `;
+      tableHTML += `</tbody></table>`;
   
       analysisResults.innerHTML = tableHTML;
   
@@ -270,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   
-    // Modal-Funktionalität
+    // MODAL-FUNKTIONALITÄT
     function showNotification(message) {
       modalMessage.textContent = message;
       modal.style.display = "block";
