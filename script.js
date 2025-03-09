@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalMessage = document.getElementById("notification-message");
     const closeButton = document.querySelector(".close-button");
   
-    // n8n Webhook URLs
+    // n8n Webhook URLs (hier anpassen, falls du andere URLs hast)
     const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
     const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
   
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // Chat-Funktionalität
     sendButton.addEventListener("click", sendMessage);
-    // Verwende keydown statt keypress, um Enter zuverlässig zu erfassen
     userInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -54,7 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(data => {
           removeTypingIndicator();
-          // Falls n8n eventuell "message" statt "output" zurückgibt
+          // Wir erwarten vom n8n-Workflow ein JSON-Feld "output"
+          // oder ersatzweise "message"
           const reply = data.output || data.message;
           if (reply) {
             addMessage("bot", reply);
@@ -129,10 +129,10 @@ document.addEventListener("DOMContentLoaded", function () {
       uploadStatus.innerHTML = '<span style="color: var(--primary-color);">⏳ Datei wird hochgeladen und analysiert...</span>';
       analysisResults.innerHTML = '<p>⏳ Analyse wird durchgeführt...</p>';
   
-      // FormData für n8n-Workflow – hier wird der Dateiname zusätzlich mitgeschickt
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("fileName", file.name);
+      // Falls du zusätzliche Felder senden möchtest:
+      // formData.append("dateiName", fileName);
   
       fetch(FILE_WEBHOOK_URL, {
         method: "POST",
@@ -149,7 +149,8 @@ document.addEventListener("DOMContentLoaded", function () {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
           
-          // Anzeige der Analyseergebnisse
+          // Wir erwarten, dass n8n ein JSON-Feld "analysis" zurückgibt
+          // z. B. { "analysis": { ... } }
           if (data && data.analysis) {
             displayAnalysisResults(data.analysis);
           } else {
@@ -174,10 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     function displayAnalysisResults(analysis) {
-      // Formatierung der Analyseergebnisse
       let resultsHTML = '<h3>Ergebnisse des Profilabgleichs</h3>';
       
-      // Beispiel: Übereinstimmungswert anzeigen
+      // Beispiel: Übereinstimmungswert
       if (analysis.matchScore !== undefined) {
         const score = analysis.matchScore;
         const scoreColor = score > 80 ? 'var(--success-color)' : (score > 60 ? 'var(--warning-color)' : 'var(--error-color)');
@@ -193,8 +193,8 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
       }
       
-      // Falls Fähigkeiten abgeglichen werden sollen
-      if (analysis.skills && analysis.skills.length > 0) {
+      // Beispiel: Fähigkeiten
+      if (analysis.skills && Array.isArray(analysis.skills) && analysis.skills.length > 0) {
         resultsHTML += '<div class="skills-match"><h4>Fähigkeiten-Abgleich</h4><ul>';
         analysis.skills.forEach(skill => {
           resultsHTML += `<li>${skill.name}: ${skill.match}%</li>`;
@@ -202,19 +202,23 @@ document.addEventListener("DOMContentLoaded", function () {
         resultsHTML += '</ul></div>';
       }
       
-      // Empfehlung anzeigen, falls vorhanden
+      // Empfehlung
       if (analysis.recommendation) {
         resultsHTML += `<div class="recommendation"><h4>Empfehlung</h4><p>${analysis.recommendation}</p></div>`;
       }
       
-      // Falls keine detaillierten Daten vorliegen
-      if (analysis.matchScore === undefined && (!analysis.skills || analysis.skills.length === 0)) {
+      // Falls gar nichts vorhanden
+      if (
+        analysis.matchScore === undefined &&
+        (!analysis.skills || analysis.skills.length === 0) &&
+        !analysis.recommendation
+      ) {
         resultsHTML = '<p>✅ Stellenanzeige wurde analysiert. Stelle dem Chatbot Fragen zu den Ergebnissen!</p>';
       }
       
       analysisResults.innerHTML = resultsHTML;
       
-      // Füge zusätzliche Styles für die Analyse-Ergebnisse nur einmal hinzu
+      // Zusätzliche Styles für die Analyse-Ergebnisse nur einmal anhängen
       if (!document.getElementById('analysis-styles')) {
         const styleElement = document.createElement('style');
         styleElement.id = 'analysis-styles';
