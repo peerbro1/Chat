@@ -127,40 +127,41 @@ document.addEventListener("DOMContentLoaded", function () {
     // 🎨 STYLE FÜR DIE BUBBLES
     const bubbleStyle = `
       display: inline-block;
-      padding: 5px 10px;
+      padding: 8px 12px;
       border-radius: 15px;
-      margin: 3px;
+      margin: 5px;
       color: white;
       font-weight: bold;
+      font-size: 14px;
     `;
 
-    let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3><table style="width: 100%; border-collapse: collapse;">`;
+    let outputHTML = `
+      <h3 style="text-align: center; color: #333;">📊 <strong>Ergebnisse des Profilabgleichs</strong></h3>
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+    `;
 
     Object.entries(parsedObj).forEach(([category, items]) => {
       if (Array.isArray(items) && items.length > 0) {
         outputHTML += `
-          <tr>
-            <th colspan="2" style="background-color: ${categoryColors[category] || "#007bff"}; color: white; padding: 10px;">
-              ${category.replace(/_/g, " ").toUpperCase()}
-            </th>
-          </tr>
+          <h4 style="color: ${categoryColors[category] || "#007bff"}; margin-top: 15px;">
+            ${category.replace(/_/g, " ").toUpperCase()}
+          </h4>
+          <div style="display: flex; flex-wrap: wrap; gap: 5px;">
         `;
 
         items.forEach(item => {
           outputHTML += `
-            <tr>
-              <td style="padding: 10px; border: 1px solid #ddd;">
-                <span style="${bubbleStyle} background-color: ${categoryColors[category] || "#007bff"}">
-                  ${item}
-                </span>
-              </td>
-            </tr>
+            <span style="${bubbleStyle} background-color: ${categoryColors[category] || "#007bff"}">
+              ${item}
+            </span>
           `;
         });
+
+        outputHTML += `</div>`;
       }
     });
 
-    outputHTML += `</table>`;
+    outputHTML += `</div>`;
     analysisResults.innerHTML = outputHTML;
   }
 });
