@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const analysisResults = document.getElementById("analysis-results");
   const uploadStatus = document.getElementById("upload-status");
 
-  // n8n Webhook URLs (ggf. anpassen)
+  // n8n Webhook URLs
   const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
   const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
@@ -88,63 +88,51 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then(response => response.json())
       .then(data => {
+        console.log("Antwort von n8n:", data); // Debugging
+
         uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen!";
-        displayBubbleChart(data);
+        processAnalysisData(data);
       })
       .catch(() => {
         uploadStatus.innerHTML = "❌ Fehler beim Hochladen.";
       });
   }
 
-  // Funktion zur Darstellung der Bubble-Grafik
-  function displayBubbleChart(parsedObj) {
-    analysisResults.innerHTML = '<canvas id="bubbleChart"></canvas>';
-    const canvas = document.getElementById("bubbleChart");
-    const ctx = canvas.getContext("2d");
+  // Verarbeitung der Analyse-Daten aus n8n
+  function processAnalysisData(data) {
+    let parsedObj;
 
-    canvas.width = 600;
-    canvas.height = 400;
-
-    const categories = [
-      { key: "passende_qualifikationen", color: "green", label: "Qualifikationen" },
-      { key: "zu_klaerende_punkte", color: "yellow", label: "Zu klären" },
-      { key: "red_flags", color: "red", label: "Red Flags" }
-    ];
-
-    let bubbles = [];
-    let xOffset = 50;
-    let yOffset = canvas.height / 2;
-
-    categories.forEach((category, index) => {
-      let items = Array.isArray(parsedObj[category.key]) ? parsedObj[category.key] : [];
-      items.forEach((text, i) => {
-        let size = Math.max(50, 20 + text.length * 2);
-        let x = xOffset + Math.random() * 100;
-        let y = yOffset + (i * 50 - (items.length * 25));
-        bubbles.push({ x, y, size, text, color: category.color });
-      });
-      xOffset += 200;
-    });
-
-    function drawBubbles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      bubbles.forEach(bubble => {
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, bubble.size / 2, 0, Math.PI * 2);
-        ctx.fillStyle = bubble.color;
-        ctx.fill();
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.fillStyle = "black";
-        ctx.font = "14px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(bubble.text, bubble.x, bubble.y);
-      });
+    // Mehrfaches JSON-Parsing für verschachtelte Strings
+    try {
+      parsedObj = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
+      if (typeof parsedObj === "string") {
+        parsedObj = JSON.parse(parsedObj); // Falls der JSON nochmal verschachtelt ist
+      }
+    } catch (e) {
+      console.error("Fehler beim JSON-Parsing:", e);
+      analysisResults.innerHTML = "<p>⚠️ Fehler beim Verarbeiten der Analyse-Daten</p>";
+      return;
     }
 
-    setInterval(drawBubbles, 50);
+    // Falls keine Daten enthalten sind
+    if (!parsedObj || Object.keys(parsedObj).length === 0) {
+      analysisResults.innerHTML = "<p>⚠️ Keine Daten zur Analyse verfügbar.</p>";
+      return;
+    }
+
+    // Darstellung als Liste (wenn Bubbles nicht funktionieren)
+    let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3>`;
+
+    Object.entries(parsedObj).forEach(([category, items]) => {
+      if (Array.isArray(items) && items.length > 0) {
+        outputHTML += `<h4>🔹 ${category.replace(/_/g, " ").toUpperCase()}</h4><ul>`;
+        items.forEach(item => {
+          outputHTML += `<li>${item}</li>`;
+        });
+        outputHTML += `</ul>`;
+      }
+    });
+
+    analysisResults.innerHTML = outputHTML;
   }
 });
