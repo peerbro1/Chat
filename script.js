@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (message === "") return;
 
         addMessage("user", message);
-        showTypingIndicator();
+        addMessage("bot", "✍️ Ich denke nach...");
 
         fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
@@ -31,11 +31,11 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            removeTypingIndicator();
+            chatBox.lastChild.remove(); // Entfernt den "Ich denke nach..." Text
             addMessage("bot", data.output || "Fehler: Keine Antwort erhalten.");
         })
         .catch(() => {
-            removeTypingIndicator();
+            chatBox.lastChild.remove();
             addMessage("bot", "❌ Fehler bei der Verbindung zum Server.");
         });
 
@@ -50,14 +50,16 @@ document.addEventListener("DOMContentLoaded", function () {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    uploadButton.addEventListener("click", uploadFile);
+
     function uploadFile() {
         const file = fileInput.files[0];
         if (!file) {
-            statusContainer.innerHTML = "❌ Bitte wähle eine PDF-Datei aus!";
+            addMessage("bot", "❌ Bitte wähle eine PDF-Datei aus!");
             return;
         }
 
-        statusContainer.innerHTML = "📂 Datei wird hochgeladen...";
+        addMessage("bot", "📤 Datei wird hochgeladen...");
 
         const formData = new FormData();
         formData.append("file", file);
@@ -68,11 +70,14 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            displayAnalysisResults(data.output);
-            statusContainer.innerHTML = "✅ Analyse abgeschlossen!";
+            addMessage("bot", "📊 Die Analyse beginnt...");
+            setTimeout(() => {
+                displayAnalysisResults(data.output);
+                addMessage("bot", "✅ Die Analyse ist abgeschlossen! Hier sind die Ergebnisse:");
+            }, 2000);
         })
         .catch(() => {
-            statusContainer.innerHTML = "❌ Fehler beim Hochladen.";
+            addMessage("bot", "❌ Fehler beim Hochladen.");
         });
     }
 
