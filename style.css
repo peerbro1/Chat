@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -5,60 +7,221 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    text-align: center;
-}
-
-header {
-    background: #0078ff;
-    color: white;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fb;
+    color: #333;
     padding: 20px;
 }
 
+/* ======= Header ======= */
+header {
+    background: linear-gradient(135deg, #4361ee, #7209b7);
+    color: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.header-content h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.header-content p {
+    font-size: 18px;
+}
+
+/* ======= Hauptcontainer ======= */
 #main-container {
     display: flex;
-    width: 90%;
-    max-width: 1400px;
-    margin: 20px auto;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+#chat-container, #analysis-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+}
+
+/* ======= Chatbox ======= */
+#chat-box {
+    height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+/* Nachrichten */
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 80%;
+}
+
+.message.user {
+    background-color: #0078ff;
+    color: white;
+    text-align: right;
+    align-self: flex-end;
+    border-radius: 10px 10px 0 10px;
+}
+
+.message.bot {
+    background-color: #e0e0e0;
+    color: black;
+    text-align: left;
+    align-self: flex-start;
+    border-radius: 10px 10px 10px 0;
+}
+
+/* Eingabe-Feld */
+#input-container {
+    display: flex;
+    margin-top: 10px;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#send-button {
+    background-color: #0078ff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#send-button:hover {
+    background-color: #0056b3;
+}
+
+/* ======= Analyse Bereich ======= */
+#analysis-container {
+    padding: 20px;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
 }
 
-#match-container, #open-container {
-    width: 20%;
-    padding: 20px;
-    background: #f8f8f8;
+#analysis-container h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
-#redflags-container {
-    width: 40%;
-    padding: 20px;
-    background: #ffe6e6;
+ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-#chat-container {
-    width: 40%;
-    padding: 20px;
-    background: white;
-}
-
-#chat-box {
-    min-height: 200px;
-    border: 1px solid #ddd;
+ul li {
     padding: 10px;
-    background: #fafafa;
+    background: #f0f0f0;
+    margin: 5px 0;
+    border-radius: 5px;
 }
 
-button {
+/* ======= Upload-Bereich ======= */
+#upload-container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.file-label {
+    display: inline-block;
     background: #0078ff;
     color: white;
-    padding: 10px;
-    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-#match-list li { color: green; font-weight: bold; }
-#open-list li { color: orange; font-weight: bold; }
-#redflags-list li { color: red; font-weight: bold; }
+.file-label:hover {
+    background: #0056b3;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#upload-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#upload-button:hover {
+    background-color: #218838;
+}
+
+/* ======= Status & Ergebnisse ======= */
+#status-container {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #0078ff;
+}
+
+.analysis-box {
+    padding: 15px;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+/* Farbcodierung für Analyse */
+.green {
+    background-color: #28a745;
+    color: white;
+}
+
+.orange {
+    background-color: #ff9800;
+    color: white;
+}
+
+.red {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* ======= Responsive Anpassungen ======= */
+@media (max-width: 768px) {
+    #main-container {
+        flex-direction: column;
+    }
+
+    #chat-container, #analysis-container {
+        width: 100%;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+}
