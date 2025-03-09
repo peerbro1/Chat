@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const uploadButton = document.getElementById("upload-button");
   const analysisResults = document.getElementById("analysis-results");
   const uploadStatus = document.getElementById("upload-status");
-  
+
   // n8n Webhook URLs (ggf. anpassen)
   const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
   const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
@@ -33,18 +33,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch(CHAT_WEBHOOK_URL, {
       method: "POST",
+      mode: "cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: message })
     })
       .then(response => response.json())
       .then(data => {
-        console.log("Chat-Response von n8n:", data);
-        const botMessage = data?.output || "Ich konnte keine Antwort generieren.";
-        addMessage("bot", botMessage);
+        addMessage("bot", data.output || "Keine Antwort erhalten.");
       })
-      .catch(error => {
-        console.error("Fehler:", error);
-        addMessage("bot", "Es ist ein Fehler aufgetreten. Bitte versuche es später noch einmal.");
+      .catch(() => {
+        addMessage("bot", "Fehler beim Abrufen der Antwort.");
       })
       .finally(() => {
         userInput.disabled = false;
@@ -60,11 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  // Datei-Upload Funktionalität
-  fileInput.addEventListener("change", function() {
-    const file = fileInput.files[0];
-    fileLabel.textContent = file ? file.name : "Datei auswählen";
-    uploadButton.disabled = !file;
+  // Datei-Upload
+  fileInput.addEventListener("change", function () {
+    if (fileInput.files.length > 0) {
+      fileLabel.textContent = fileInput.files[0].name;
+      uploadButton.disabled = false;
+    }
   });
 
   uploadButton.addEventListener("click", uploadFile);
@@ -72,71 +71,80 @@ document.addEventListener("DOMContentLoaded", function () {
   function uploadFile() {
     const file = fileInput.files[0];
     if (!file || file.type !== "application/pdf") {
-      alert("Bitte wähle eine gültige PDF-Datei aus.");
+      uploadStatus.innerHTML = "Bitte eine PDF-Datei hochladen.";
       return;
     }
 
+    uploadStatus.innerHTML = "⏳ Datei wird hochgeladen...";
     uploadButton.disabled = true;
-    uploadStatus.innerHTML = "⏳ Datei wird hochgeladen und analysiert...";
-    analysisResults.innerHTML = "⏳ Analyse wird durchgeführt...";
 
     const formData = new FormData();
     formData.append("file", file);
 
     fetch(FILE_WEBHOOK_URL, {
       method: "POST",
+      mode: "cors",
       body: formData
     })
       .then(response => response.json())
       .then(data => {
-        console.log("Upload-Response von n8n:", data);
-        displayAnalysisResults(data);
+        uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen!";
+        displayBubbleChart(data);
       })
-      .catch(error => {
-        console.error("Upload-Fehler:", error);
-        analysisResults.innerHTML = "⚠️ Fehler beim Hochladen. Bitte versuche es erneut.";
+      .catch(() => {
+        uploadStatus.innerHTML = "❌ Fehler beim Hochladen.";
       });
   }
 
-  function displayAnalysisResults(data) {
-    if (!data || Object.keys(data).length === 0) {
-      analysisResults.innerHTML = "⚠️ Keine Analyseergebnisse verfügbar.";
-      return;
+  // Funktion zur Darstellung der Bubble-Grafik
+  function displayBubbleChart(parsedObj) {
+    analysisResults.innerHTML = '<canvas id="bubbleChart"></canvas>';
+    const canvas = document.getElementById("bubbleChart");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = 600;
+    canvas.height = 400;
+
+    const categories = [
+      { key: "passende_qualifikationen", color: "green", label: "Qualifikationen" },
+      { key: "zu_klaerende_punkte", color: "yellow", label: "Zu klären" },
+      { key: "red_flags", color: "red", label: "Red Flags" }
+    ];
+
+    let bubbles = [];
+    let xOffset = 50;
+    let yOffset = canvas.height / 2;
+
+    categories.forEach((category, index) => {
+      let items = Array.isArray(parsedObj[category.key]) ? parsedObj[category.key] : [];
+      items.forEach((text, i) => {
+        let size = Math.max(50, 20 + text.length * 2);
+        let x = xOffset + Math.random() * 100;
+        let y = yOffset + (i * 50 - (items.length * 25));
+        bubbles.push({ x, y, size, text, color: category.color });
+      });
+      xOffset += 200;
+    });
+
+    function drawBubbles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => {
+        ctx.beginPath();
+        ctx.arc(bubble.x, bubble.y, bubble.size / 2, 0, Math.PI * 2);
+        ctx.fillStyle = bubble.color;
+        ctx.fill();
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = "black";
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(bubble.text, bubble.x, bubble.y);
+      });
     }
 
-    let tableHTML = `
-      <h3>Ergebnisse des Profilabgleichs</h3>
-      <table class="analysis-table">
-        <thead>
-          <tr>
-            <th>Passende Qualifikationen</th>
-            <th>Zu klärende Punkte</th>
-            <th>Red Flags</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-
-    const maxRows = Math.max(
-      data.passende_qualifikationen?.length || 0,
-      data.zu_klaerende_punkte?.length || 0,
-      data.red_flags?.length || 0
-    );
-
-    for (let i = 0; i < maxRows; i++) {
-      tableHTML += `
-        <tr>
-          <td>${data.passende_qualifikationen?.[i] || ""}</td>
-          <td>${data.zu_klaerende_punkte?.[i] || ""}</td>
-          <td>${data.red_flags?.[i] || ""}</td>
-        </tr>
-      `;
-    }
-
-    tableHTML += `</tbody></table>`;
-    analysisResults.innerHTML = tableHTML;
+    setInterval(drawBubbles, 50);
   }
-
-  // Erste Nachricht des Chatbots
-  addMessage("bot", "Hallo! Ich bin der Bewerbungsbot und kann dir Fragen zu meinem Profil beantworten. Was möchtest du wissen?");
 });
