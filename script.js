@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            chatBox.lastChild.remove(); // Entfernt den "Ich denke nach..." Text
+            chatBox.lastChild.remove();
             addMessage("bot", data.output || "Fehler: Keine Antwort erhalten.");
         })
         .catch(() => {
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(data => {
             addMessage("bot", "📊 Die Analyse beginnt...");
             setTimeout(() => {
-                displayAnalysisResults(data.output);
+                displayAnalysisResults(data);
                 addMessage("bot", "✅ Die Analyse ist abgeschlossen! Hier sind die Ergebnisse:");
             }, 2000);
         })
@@ -82,8 +82,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function displayAnalysisResults(data) {
-        matchList.innerHTML = data.passende_qualifikationen?.map(item => `<li>${item}</li>`).join('') || "Keine Daten.";
-        openList.innerHTML = data.zu_klaerende_punkte?.map(item => `<li>${item}</li>`).join('') || "Keine Daten.";
-        redflagsList.innerHTML = data.red_flags?.map(item => `<li>${item}</li>`).join('') || "Keine Daten.";
+        matchList.innerHTML = data.passende_qualifikationen.map(item => `<li>${item}</li>`).join('') || "Keine Daten.";
+        openList.innerHTML = data.zu_klaerende_punkte.map(item => `<li>${item}</li>`).join('') || "Keine Daten.";
+        redflagsList.innerHTML = data.red_flags.map(item => `<li>${item}</li>`).join('') || "Keine Daten.";
     }
 });
