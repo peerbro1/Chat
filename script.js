@@ -1,103 +1,138 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const chatBox = document.getElementById("chat-box");
-    const userInput = document.getElementById("user-input");
-    const sendButton = document.getElementById("send-button");
-    const fileInput = document.getElementById("file-input");
-    const uploadButton = document.getElementById("upload-button");
-    const analysisTable = document.querySelector("#analysis-table tbody");
+  // DOM-Elemente
+  const chatBox = document.getElementById("chat-box");
+  const userInput = document.getElementById("user-input");
+  const sendButton = document.getElementById("send-button");
+  const fileInput = document.getElementById("file-input");
+  const fileLabel = document.getElementById("file-label");
+  const uploadButton = document.getElementById("upload-button");
+  const analysisResults = document.getElementById("analysis-results");
+  const uploadStatus = document.getElementById("upload-status");
 
-    const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
-    const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
+  // n8n Webhook URLs
+  const CHAT_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/b881a9b8-1221-4aa8-b4ed-8b483bb08b3a";
+  const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
 
-    sendButton.addEventListener("click", sendMessage);
-    userInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendMessage();
+  // Chat-Funktionalität
+  sendButton.addEventListener("click", sendMessage);
+  userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  function sendMessage() {
+    const message = userInput.value.trim();
+    if (message === "") return;
+
+    addMessage("user", message);
+    userInput.value = "";
+    userInput.disabled = true;
+    sendButton.disabled = true;
+
+    fetch(CHAT_WEBHOOK_URL, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: message })
+    })
+      .then(response => response.json())
+      .then(data => {
+        addMessage("bot", data.output || "Keine Antwort erhalten.");
+      })
+      .catch(() => {
+        addMessage("bot", "Fehler beim Abrufen der Antwort.");
+      })
+      .finally(() => {
+        userInput.disabled = false;
+        sendButton.disabled = false;
+      });
+  }
+
+  function addMessage(sender, text) {
+    const msgElement = document.createElement("div");
+    msgElement.className = `message ${sender}`;
+    msgElement.textContent = text;
+    chatBox.appendChild(msgElement);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Datei-Upload
+  fileInput.addEventListener("change", function () {
+    if (fileInput.files.length > 0) {
+      fileLabel.textContent = fileInput.files[0].name;
+      uploadButton.disabled = false;
+    }
+  });
+
+  uploadButton.addEventListener("click", uploadFile);
+
+  function uploadFile() {
+    const file = fileInput.files[0];
+    if (!file || file.type !== "application/pdf") {
+      uploadStatus.innerHTML = "Bitte eine PDF-Datei hochladen.";
+      return;
+    }
+
+    uploadStatus.innerHTML = "⏳ Datei wird hochgeladen...";
+    uploadButton.disabled = true;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch(FILE_WEBHOOK_URL, {
+      method: "POST",
+      mode: "cors",
+      body: formData
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Antwort von n8n:", data); // Debugging
+
+        uploadStatus.innerHTML = "✅ Datei erfolgreich hochgeladen!";
+        processAnalysisData(data);
+      })
+      .catch(() => {
+        uploadStatus.innerHTML = "❌ Fehler beim Hochladen.";
+      });
+  }
+
+  // Verarbeitung der Analyse-Daten aus n8n
+  function processAnalysisData(data) {
+    let parsedObj;
+
+    // Mehrfaches JSON-Parsing für verschachtelte Strings
+    try {
+      parsedObj = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
+      if (typeof parsedObj === "string") {
+        parsedObj = JSON.parse(parsedObj); // Falls der JSON nochmal verschachtelt ist
+      }
+    } catch (e) {
+      console.error("Fehler beim JSON-Parsing:", e);
+      analysisResults.innerHTML = "<p>⚠️ Fehler beim Verarbeiten der Analyse-Daten</p>";
+      return;
+    }
+
+    // Falls keine Daten enthalten sind
+    if (!parsedObj || Object.keys(parsedObj).length === 0) {
+      analysisResults.innerHTML = "<p>⚠️ Keine Daten zur Analyse verfügbar.</p>";
+      return;
+    }
+
+    // Darstellung als Liste (wenn Bubbles nicht funktionieren)
+    let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3>`;
+
+    Object.entries(parsedObj).forEach(([category, items]) => {
+      if (Array.isArray(items) && items.length > 0) {
+        outputHTML += `<h4>🔹 ${category.replace(/_/g, " ").toUpperCase()}</h4><ul>`;
+        items.forEach(item => {
+          outputHTML += `<li>${item}</li>`;
+        });
+        outputHTML += `</ul>`;
+      }
     });
 
-    function sendMessage() {
-        const message = userInput.value.trim();
-        if (message === "") return;
-
-        addMessage("user", message);
-
-        fetch(CHAT_WEBHOOK_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
-        })
-        .then(response => {
-            console.log("Antwort-Status:", response.status);
-            return response.json();
-        })
-        .then(data => {
-            console.log("Antwort-Body:", data);
-            if (data && data.output) {
-                addMessage("bot", data.output);
-            } else {
-                addMessage("bot", "Fehler: Keine gültige Antwort erhalten.");
-            }
-        })
-        .catch(error => {
-            console.error("Fetch-Fehler:", error);
-            addMessage("bot", "Fehler bei der Verbindung zum Server.");
-        });
-
-        userInput.value = "";
-    }
-
-    function addMessage(sender, text) {
-        const msg = document.createElement("div");
-        msg.className = `message bubble ${sender}`;
-        msg.textContent = text;
-        chatBox.appendChild(msg);
-        chatBox.scrollTop = chatBox.scrollHeight; // Scroll immer zum neuesten Eintrag
-    }
-
-    uploadButton.addEventListener("click", uploadFile);
-
-    function uploadFile() {
-        const file = fileInput.files[0];
-        if (!file) {
-            alert("Bitte Datei auswählen!");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("file", file);
-
-        fetch(FILE_WEBHOOK_URL, {
-            method: "POST",
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Fehler beim Hochladen");
-            }
-            return response.json();
-        })
-        .then(data => {
-            let parsedData = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
-            updateAnalysisTable(parsedData);
-        })
-        .catch(error => {
-            console.error(error);
-            alert("Fehler beim Hochladen: " + error.message);
-        });
-    }
-
-    function updateAnalysisTable(data) {
-        analysisTable.innerHTML = "";
-        const renamedKeys = {
-            "passende_qualifikationen": "Das passt gut 🤗",
-            "zu_klaerende_punkte": "Sollten wir noch mal anschauen 🧐",
-            "red_flags": "Red Flags? 😧"
-        };
-
-        Object.entries(data).forEach(([key, value]) => {
-            const newKey = renamedKeys[key] || key;
-            const row = document.createElement("tr");
-            row.innerHTML = `<td>${newKey}</td><td>${value.join(", ")}</td>`;
-            analysisTable.appendChild(row);
-        });
-    }
+    analysisResults.innerHTML = outputHTML;
+  }
 });
