@@ -10,27 +10,24 @@
 <body>
     <header>
         <div class="header-content">
-            <h1>Bewerbungs-Chatbot</h1>
-            
+            <h1>Deine Stellenanzeige trifft auf mich</h1>
             <p class="welcome-text">
-                Willkommen! Hier kannst du schnell und direkt mehr über mich erfahren.
+                Willkommen! Ich habe diesen Chatbot selbst entwickelt, um dir zu zeigen, wie gut ich zu euch passe:
             </p>
-
             <p class="welcome-text">
-                🔹 Stelle deine Fragen im Chat – Erfahre mehr über meine Qualifikationen, Erfahrung und Stärken.  
-                🔹 Lade eine Stellenausschreibung als PDF hoch – Der Abgleich zeigt, wie gut mein Profil passt.  
-                🔹 Klare Einschätzung – Welche Anforderungen erfülle ich, wo gibt es Entwicklungspotenzial?  
+                ✅ <b>Lade deine Stellenausschreibung als PDF hoch</b><br>
+                ✅ <b>Mein System gleicht sie mit meinem Profil ab</b><br>
+                ✅ <b>Der Chatbot beantwortet, was ihr noch wissen wollt</b><br>
             </p>
-
             <p class="welcome-text">
-                Nutze diese Möglichkeit, um unkompliziert und effizient herauszufinden, ob ich zu deiner offenen Position passe.  
-                Ich freue mich darauf, mich in einem persönlichen Gespräch näher vorzustellen!
+                So siehst du sofort, ob ich der richtige Kandidat für euch bin.<br>
+                Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!
             </p>
+            <p class="beta-hinweis">⚠ Hinweis: Der Chatbot befindet sich in der <b>Beta-Phase</b>, es können noch Fehler auftreten.</p>
         </div>
     </header>
 
     <main id="main-container">
-        <!-- Chat-Bereich -->
         <div id="chat-analysis-container">
             <div id="chat-container">
                 <div class="panel-header chat-header">
@@ -44,7 +41,6 @@
                 </div>
             </div>
 
-            <!-- Analyse-Bereich -->
             <div id="analysis-container">
                 <div class="panel-header">
                     <i class="fas fa-file-alt"></i>
@@ -66,16 +62,15 @@
         </div>
     </main>
 
-    <!-- Upload-Bereich -->
     <section id="upload-container">
         <h3>📂 Stellenausschreibung hochladen</h3>
         <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>
         <div class="upload-buttons">
-            <label for="file-input" class="upload-button">
+            <label for="file-input" class="upload-button blue">
                 <i class="fas fa-file-pdf"></i> PDF auswählen
             </label>
             <input type="file" id="file-input" accept=".pdf">
-            <button id="upload-button" class="upload-button"><i class="fas fa-upload"></i> Hochladen</button>
+            <button id="upload-button" class="upload-button green"><i class="fas fa-upload"></i> Hochladen</button>
         </div>
         <div id="status-container"></div>
     </section>
