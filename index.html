@@ -5,72 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bewerbungs-Chatbot</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
-    <script src="script.js" defer></script>
+    <script defer src="script.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <!-- HEADER -->
+
+    <!-- Begrüßung -->
     <header>
-        <div class="header-content">
-            <h1>Deine Stellenanzeige trifft auf mich</h1>
-            <p>Willkommen! Ich habe diesen Chatbot entwickelt, um dir zu zeigen, wie gut ich passe:</p>
-            <ul>
-                <li>✅ <b>Lade deine Stellenausschreibung als PDF hoch</b></li>
-                <li>✅ <b>Mein System gleicht sie mit meinem Profil ab</b></li>
-                <li>✅ <b>Der Chatbot beantwortet deine Fragen</b></li>
-            </ul>
-            <p class="beta-hinweis">⚠ Hinweis: Der Chatbot befindet sich in der <b>Beta-Phase</b>.</p>
-        </div>
+        <h1>Deine Stellenanzeige trifft auf mich</h1>
+        <p>Willkommen! Ich habe diesen Chatbot entwickelt, um dir zu zeigen, wie gut ich zu euch passe.</p>
+        <ul>
+            <li>✅ <strong>Lade deine Stellenanzeige als PDF hoch</strong></li>
+            <li>✅ <strong>Mein System gleicht sie mit meinem Profil ab</strong></li>
+            <li>✅ <strong>Der Chatbot beantwortet deine Fragen</strong></li>
+        </ul>
+        <p>So siehst du sofort, ob ich der richtige Kandidat für euch bin.<br>Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!</p>
+        <p>⚠️ <strong>Hinweis:</strong> Der Chatbot befindet sich in der <strong>Beta-Phase</strong>, es können noch Fehler auftreten.</p>
     </header>
 
-    <!-- CHAT & ANALYSE -->
+    <!-- Mittelteil mit Chat und Analyse -->
     <main>
-        <div id="chat-analysis-container">
-            <div id="chat-container">
-                <div class="panel-header">
-                    <i class="fas fa-comments"></i>
-                    <h2>Chat mit dem Bewerbungsbot</h2>
-                </div>
-                <div id="chat-box"></div>
-                <div id="input-container">
-                    <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
-                    <button id="send-button"><i class="fas fa-paper-plane"></i></button>
-                </div>
+        <section class="chat-container">
+            <h2>💬 Chat mit dem Bewerbungsbot</h2>
+            <div id="chat-box"></div>
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
+                <button id="send-button"><i class="fas fa-paper-plane"></i></button>
             </div>
+        </section>
 
-            <div id="analysis-container">
-                <div class="panel-header">
-                    <i class="fas fa-file-alt"></i>
-                    <h2>Stellenabgleich</h2>
-                </div>
-                <div id="match-container">
-                    <h3>✅ Passende Qualifikationen</h3>
-                    <ul id="match-list"></ul>
-                </div>
-                <div id="open-container">
-                    <h3>🧐 Zu klärende Punkte</h3>
-                    <ul id="open-list"></ul>
-                </div>
-                <div id="redflags-container">
-                    <h3>⚠ Red Flags</h3>
-                    <ul id="redflags-list"></ul>
-                </div>
+        <section class="analysis-container">
+            <h2>📄 Stellenabgleich</h2>
+            <div id="analysis-results">
+                <p>⚠️ Keine Analyse-Ergebnisse gefunden.</p>
             </div>
-        </div>
+        </section>
     </main>
 
-    <!-- DATEI-UPLOAD -->
-    <section id="upload-container">
-        <h3>📂 Stellenausschreibung hochladen</h3>
+    <!-- Datei-Upload-Bereich -->
+    <section class="upload-container">
+        <h2>📂 Stellenanzeige hochladen</h2>
         <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>
-        <div class="upload-buttons">
-            <label for="file-input" class="upload-button blue">
-                <i class="fas fa-file-pdf"></i> PDF auswählen
-            </label>
-            <input type="file" id="file-input" accept=".pdf">
-            <button id="upload-button" class="upload-button green"><i class="fas fa-upload"></i> Hochladen</button>
-        </div>
-        <div id="status-container"></div>
+        <input type="file" id="file-input">
+        <button id="upload-button">📤 Hochladen</button>
     </section>
+
 </body>
 </html>

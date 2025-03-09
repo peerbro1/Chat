@@ -1,77 +1,82 @@
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fc;
-    text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
-/* HEADER */
+body {
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+/* Header */
 header {
-    width: 80%;
-    margin: 0 auto;
-    background: linear-gradient(135deg, #3f51b5, #8e24aa);
+    background: linear-gradient(135deg, #4361ee, #7209b7);
     color: white;
     padding: 30px;
+    text-align: center;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
 
-h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.beta-hinweis {
-    font-size: 14px;
-    margin-top: 10px;
-    color: #ffd700;
-}
-
-/* MITTELTEIL */
-#chat-analysis-container {
+/* Hauptcontainer */
+main {
     display: flex;
     justify-content: space-between;
-    width: 80%;
-    margin: 30px auto;
     gap: 20px;
+    max-width: 900px;
+    margin: auto;
 }
 
-#chat-container,
-#analysis-container {
-    flex: 1;
+.chat-container, .analysis-container {
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
 }
 
-/* UPLOAD */
-#upload-container {
-    width: 80%;
-    margin: 30px auto;
-    text-align: center;
+/* Chat */
+#chat-box {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #fff;
 }
 
-.upload-buttons {
+.chat-input {
     display: flex;
-    justify-content: center;
     gap: 10px;
 }
 
-.upload-button {
-    padding: 15px 20px;
-    font-size: 16px;
-    font-weight: bold;
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
+}
+
+.chat-input button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
     cursor: pointer;
+    border-radius: 5px;
 }
 
-.upload-button.blue {
-    background-color: #2196f3;
-    color: white;
-}
-
-.upload-button.green {
-    background-color: #4caf50;
-    color: white;
+/* Upload-Bereich */
+.upload-container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: auto;
 }
