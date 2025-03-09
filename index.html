@@ -8,7 +8,6 @@
     <script defer src="script.js"></script>
 </head>
 <body>
-
     <!-- Begrüßungsbereich -->
     <header>
         <h1>Deine Stellenanzeige trifft auf mich</h1>
@@ -27,7 +26,11 @@
     <main>
         <section class="chat-container">
             <h2>💬 Chat mit dem Bewerbungsbot</h2>
-            <div id="chat-box"></div>
+            <div id="chat-box">
+                <div class="message bot">
+                    Hallo! Ich bin der Bewerbungsbot und kann dir Fragen zu meinem Profil beantworten. Was möchtest du wissen?
+                </div>
+            </div>
             <div class="chat-input">
                 <input type="text" id="user-input" placeholder="Schreib eine Nachricht...">
                 <button id="send-button">📨</button>
@@ -36,7 +39,10 @@
 
         <section class="analysis-container">
             <h2>📄 Stellenabgleich</h2>
-            <div id="analysis-results">⚠️ Keine Analyse-Ergebnisse gefunden.</div>
+            <div id="analysis-results">
+                <p>⚠️ Keine Analyse-Ergebnisse gefunden.</p>
+                <p>Bitte lade eine Stellenanzeige als PDF hoch, um den Abgleich zu starten.</p>
+            </div>
         </section>
     </main>
 
@@ -45,10 +51,21 @@
         <h2>📂 Stellenanzeige hochladen</h2>
         <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>
         <div class="upload-container">
-            <input type="file" id="file-input" accept=".pdf">
-            <button id="upload-button">📤 Hochladen</button>
+            <div class="file-input-wrapper">
+                <input type="file" id="file-input" accept=".pdf">
+                <label for="file-input" id="file-label">Datei auswählen</label>
+            </div>
+            <button id="upload-button" disabled>📤 Hochladen</button>
         </div>
+        <div id="upload-status"></div>
     </footer>
 
+    <!-- Modal für Benachrichtigungen -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p id="notification-message"></p>
+        </div>
+    </div>
 </body>
 </html>
