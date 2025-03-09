@@ -146,11 +146,12 @@ document.addEventListener("DOMContentLoaded", function () {
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
           
           // Erwartet: data.analysis mit den drei Arrays
-          if (data && data.analysis) {
-            displayAnalysisResults(data.analysis);
+          if (data && data.output) {
+            displayAnalysisResults(data.output);
           } else {
             analysisResults.innerHTML = '<p>⚠️ Keine detaillierten Analyseergebnisse verfügbar.</p>';
           }
+          
           
           // Zurücksetzen
           fileInput.value = "";
