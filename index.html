@@ -3,36 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bewerbungs-Chatbot von Peer Meyer-Puttlitz</title>
+    <title>Bewerbungs-Chatbot</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
     <script src="script.js" defer></script>
 </head>
 <body>
-    <!-- HEADER / BEGRÜSSUNG -->
+    <!-- HEADER -->
     <header>
         <div class="header-content">
             <h1>Deine Stellenanzeige trifft auf mich</h1>
-            <p class="welcome-text">
-                Willkommen! Ich habe diesen Chatbot selbst entwickelt, um dir zu zeigen, wie gut ich zu euch passe:
-            </p>
-            <ul class="welcome-list">
+            <p>Willkommen! Ich habe diesen Chatbot entwickelt, um dir zu zeigen, wie gut ich passe:</p>
+            <ul>
                 <li>✅ <b>Lade deine Stellenausschreibung als PDF hoch</b></li>
                 <li>✅ <b>Mein System gleicht sie mit meinem Profil ab</b></li>
-                <li>✅ <b>Der Chatbot beantwortet, was ihr noch wissen wollt</b></li>
+                <li>✅ <b>Der Chatbot beantwortet deine Fragen</b></li>
             </ul>
-            <p class="welcome-text">
-                So siehst du sofort, ob ich der richtige Kandidat für euch bin. <br>
-                Wenn ich euch gefalle, freue ich mich auf ein persönliches Gespräch!
-            </p>
-            <p class="beta-hinweis">⚠ Hinweis: Der Chatbot befindet sich in der <b>Beta-Phase</b>, es können noch Fehler auftreten.</p>
+            <p class="beta-hinweis">⚠ Hinweis: Der Chatbot befindet sich in der <b>Beta-Phase</b>.</p>
         </div>
     </header>
 
-    <!-- MITTELTEIL: CHAT & ANALYSE -->
+    <!-- CHAT & ANALYSE -->
     <main>
         <div id="chat-analysis-container">
-            <!-- Chat-Fenster -->
             <div id="chat-container">
                 <div class="panel-header">
                     <i class="fas fa-comments"></i>
@@ -45,7 +38,6 @@
                 </div>
             </div>
 
-            <!-- Analyse-Ergebnis -->
             <div id="analysis-container">
                 <div class="panel-header">
                     <i class="fas fa-file-alt"></i>
@@ -67,7 +59,7 @@
         </div>
     </main>
 
-    <!-- UPLOAD-BEREICH -->
+    <!-- DATEI-UPLOAD -->
     <section id="upload-container">
         <h3>📂 Stellenausschreibung hochladen</h3>
         <p>Lade hier die PDF hoch, um den Abgleich zu starten.</p>

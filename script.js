@@ -6,35 +6,41 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadButton = document.getElementById("upload-button");
     const statusContainer = document.getElementById("status-container");
 
-    const FILE_WEBHOOK_URL = "https://peerbro1.app.n8n.cloud/webhook/18a718fb-87cb-4a36-9d73-1a0b1fb8c23f";
+    const CHAT_WEBHOOK_URL = "DEIN_CHAT_WEBHOOK";
+    const FILE_WEBHOOK_URL = "DEIN_UPLOAD_WEBHOOK";
 
+    sendButton.addEventListener("click", sendMessage);
     uploadButton.addEventListener("click", uploadFile);
 
-    function uploadFile() {
-        const file = fileInput.files[0];
-        if (!file) {
-            statusContainer.innerHTML = "❌ Bitte wähle eine PDF-Datei aus!";
-            return;
-        }
+    function sendMessage() {
+        const message = userInput.value.trim();
+        if (message === "") return;
+        
+        chatBox.innerHTML += `<div class="user-message">${message}</div>`;
+        userInput.value = "";
 
-        statusContainer.innerHTML = "📤 Datei wird hochgeladen...";
-
-        const formData = new FormData();
-        formData.append("file", file);
-
-        fetch(FILE_WEBHOOK_URL, {
+        fetch(CHAT_WEBHOOK_URL, {
             method: "POST",
-            body: formData
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message })
         })
         .then(response => response.json())
         .then(data => {
-            statusContainer.innerHTML = "📊 Die Analyse beginnt...";
-            setTimeout(() => {
-                statusContainer.innerHTML = "✅ Analyse abgeschlossen!";
-            }, 2000);
+            chatBox.innerHTML += `<div class="bot-message">${data.response}</div>`;
+        });
+    }
+
+    function uploadFile() {
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        fetch(FILE_WEBHOOK_URL, {
+            method: "POST",
+            body: file
         })
-        .catch(() => {
-            statusContainer.innerHTML = "❌ Fehler beim Hochladen.";
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("match-list").innerHTML = data.match;
         });
     }
 });
