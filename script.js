@@ -100,8 +100,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Verarbeitung der Analyse-Daten aus n8n
   function processAnalysisData(data) {
-    let parsedObj = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
+    console.log("Debug: Komplette Antwort von n8n:", data);
 
+    // Falls data.output ein JSON-String ist, muss er geparst werden
+    let parsedObj = typeof data.output === "string" ? JSON.parse(data.output) : data.output;
 
     if (!parsedObj || typeof parsedObj !== "object") {
       console.error("Fehler: Daten sind kein gültiges JSON-Objekt", parsedObj);
@@ -115,9 +117,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Darstellung als Liste (anstatt von Bubbles)
+    // Darstellung als Liste
     let outputHTML = `<h3>📊 Ergebnisse des Profilabgleichs</h3>`;
-
     Object.entries(parsedObj).forEach(([category, items]) => {
       if (Array.isArray(items) && items.length > 0) {
         outputHTML += `<h4>🔹 ${category.replace(/_/g, " ").toUpperCase()}</h4><ul>`;
