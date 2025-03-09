@@ -145,6 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
           isUploading = false;
           uploadStatus.innerHTML = '<span style="color: var(--success-color);">✅ Datei erfolgreich hochgeladen und analysiert!</span>';
           
+          // Erwartet: data.analysis mit den drei Kategorien
           if (data && data.analysis) {
             displayAnalysisResults(data.analysis);
           } else {
@@ -168,91 +169,91 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
   
+    /**
+     * Stellt die Analyse-Ergebnisse in drei Kategorien dar:
+     *   - passende_qualifikationen
+     *   - zu_klaerende_punkte
+     *   - red_flags
+     * Jede Kategorie wird in "Bubbles" angezeigt.
+     */
     function displayAnalysisResults(analysis) {
       let resultsHTML = '<h3>Ergebnisse des Profilabgleichs</h3>';
-      
-      // Beispiel: Übereinstimmungswert
-      if (analysis.matchScore !== undefined) {
-        const score = analysis.matchScore;
-        const scoreColor = score > 80 ? 'var(--success-color)' : (score > 60 ? 'var(--warning-color)' : 'var(--error-color)');
-        
+  
+      // Passende Qualifikationen
+      if (analysis.passende_qualifikationen && analysis.passende_qualifikationen.length > 0) {
         resultsHTML += `
-          <div class="match-score">
-            <h4>Übereinstimmung</h4>
-            <div class="progress-bar">
-              <div class="progress" style="width: ${score}%; background-color: ${scoreColor};"></div>
-            </div>
-            <p style="color: ${scoreColor};">${score}%</p>
-          </div>
+          <div class="category">
+            <h4>Passende Qualifikationen</h4>
+            <div class="bubbles">
         `;
-      }
-      
-      // Beispiel: Fähigkeiten
-      if (analysis.skills && Array.isArray(analysis.skills) && analysis.skills.length > 0) {
-        resultsHTML += '<div class="skills-match"><h4>Fähigkeiten-Abgleich</h4><ul>';
-        analysis.skills.forEach(skill => {
-          resultsHTML += `<li>${skill.name}: ${skill.match}%</li>`;
+        analysis.passende_qualifikationen.forEach(item => {
+          resultsHTML += `<span class="bubble">${item}</span>`;
         });
-        resultsHTML += '</ul></div>';
+        resultsHTML += `</div></div>`;
       }
-      
-      // Empfehlung
-      if (analysis.recommendation) {
-        resultsHTML += `<div class="recommendation"><h4>Empfehlung</h4><p>${analysis.recommendation}</p></div>`;
+  
+      // Zu klärende Punkte
+      if (analysis.zu_klaerende_punkte && analysis.zu_klaerende_punkte.length > 0) {
+        resultsHTML += `
+          <div class="category">
+            <h4>Zu klärende Punkte</h4>
+            <div class="bubbles">
+        `;
+        analysis.zu_klaerende_punkte.forEach(item => {
+          resultsHTML += `<span class="bubble">${item}</span>`;
+        });
+        resultsHTML += `</div></div>`;
       }
-      
-      // Falls gar nichts vorhanden
+  
+      // Red Flags
+      if (analysis.red_flags && analysis.red_flags.length > 0) {
+        resultsHTML += `
+          <div class="category">
+            <h4>Red Flags</h4>
+            <div class="bubbles">
+        `;
+        analysis.red_flags.forEach(item => {
+          resultsHTML += `<span class="bubble">${item}</span>`;
+        });
+        resultsHTML += `</div></div>`;
+      }
+  
+      // Falls gar keine Kategorien gefüllt sind
       if (
-        analysis.matchScore === undefined &&
-        (!analysis.skills || analysis.skills.length === 0) &&
-        !analysis.recommendation
+        (!analysis.passende_qualifikationen || analysis.passende_qualifikationen.length === 0) &&
+        (!analysis.zu_klaerende_punkte || analysis.zu_klaerende_punkte.length === 0) &&
+        (!analysis.red_flags || analysis.red_flags.length === 0)
       ) {
-        resultsHTML = '<p>✅ Stellenanzeige wurde analysiert. Stelle dem Chatbot Fragen zu den Ergebnissen!</p>';
+        resultsHTML += `<p>Keine detaillierten Analyseergebnisse verfügbar.</p>`;
       }
-      
+  
       analysisResults.innerHTML = resultsHTML;
-      
-      // Zusätzliche Styles für die Analyse-Ergebnisse nur einmal anhängen
+  
+      // Zusätzliche Styles für die Bubbles nur einmal anhängen
       if (!document.getElementById('analysis-styles')) {
         const styleElement = document.createElement('style');
         styleElement.id = 'analysis-styles';
         styleElement.textContent = `
-          .match-score {
-            text-align: center;
+          .category {
             margin-bottom: 20px;
-          }
-          .progress-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 10px;
-            margin: 10px 0;
-            overflow: hidden;
-          }
-          .progress {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 1s ease;
-          }
-          .skills-match {
-            margin: 20px 0;
             text-align: left;
           }
-          .skills-match ul {
-            list-style-type: none;
-            padding: 0;
+          .category h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
           }
-          .skills-match li {
-            margin: 5px 0;
-            padding: 5px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
+          .bubbles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
           }
-          .recommendation {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e7f5ff;
-            border-radius: 5px;
+          .bubble {
+            display: inline-block;
+            background-color: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--dark-text);
           }
         `;
         document.head.appendChild(styleElement);
